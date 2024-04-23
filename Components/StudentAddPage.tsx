@@ -1,15 +1,24 @@
 import { TextInput,View,Image,StyleSheet, StatusBar, TouchableOpacity,Text } from "react-native";
 import { useState,FC } from "react";
+import StudentModel, {Student} from "../Model/StudentModel"
 
-export default function StudentAddPage(){
+const StudentAddPage:FC<{navigation:any}> = ({navigation}) =>{
     const [name,onChangeName] = useState("");
     const [id,onChangeId] = useState("");
     const [address,onChangeAddress] = useState("");
     const onSave = () =>{
         console.log('save');
+        const student:Student = {
+          name:name,
+          id:id,
+          imageUrl:address
+        }
+        StudentModel.addStudent(student);
+        navigation.navigate('StudentList');
     }
     const onCancel = () =>{
         console.log('Cancel');
+        navigation.navigate('StudentList');
 
     }
     
@@ -84,4 +93,6 @@ const styles = StyleSheet.create({
     buttonText:{
         padding:10
     }
-})
+});
+
+export default StudentAddPage;

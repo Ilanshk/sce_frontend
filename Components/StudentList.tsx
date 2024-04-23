@@ -1,17 +1,35 @@
 import React,{FC, useEffect, useState} from 'react';
-import{Text,FlatList, StyleSheet }from 'react-native';
+import{Text,FlatList, StyleSheet, Button }from 'react-native';
 import StudentListRow from './StudentListRow';
 import StudentModel,{Student} from '../Model/StudentModel';
 
 
 
-const StudentList : FC = () => {
+const StudentList : FC<{navigation:any}> = ({navigation}) => {
   const [data,setData] = useState<Student[]>([]);
+  console.log(data);
   const onItemSelected = (id:string) =>{
     console.log("Item selected: "+id);
+    navigation.navigate('StudentDetailsPage',{id:id});
   }
   useEffect(()=>{
-    setData(StudentModel.getAllStudents());
+    const unsubscribe = navigation.addListener('focus',()=>{
+      setData([...StudentModel.getAllStudents()])
+      console.log("screen in focus");
+    })
+    return unsubscribe;
+  },[navigation])
+
+
+  useEffect(()=>{
+    navigation.setOptions({
+      headerRight: () =>(
+        <Button 
+          onPress={() => navigation.navigate('StudentAddPage')} 
+          title='Add'
+        />
+      )
+    })
   },[])
   return (
     <FlatList

@@ -1,15 +1,45 @@
 import { StyleSheet,Button, Text, View, Image,Alert, TouchableOpacity, Pressable,Platform, TextInput,StatusBar } from 'react-native';
 import React,{FC, useState} from 'react';
 import StudentList from './Components/StudentList';
-//onItemsSelected:()=>void
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import StudentAddPage from './Components/StudentAddPage';
+import StudentDetailsPage from './Components/StudentDetailsPage';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+const StudentsListStack = createNativeStackNavigator();
+
+const StudentsListScreen :FC = () =>{
+  return(
+    <StudentsListStack.Navigator>
+      <StudentsListStack.Screen name="StudentList" component={StudentList} options={{title:'Students List'}}/>
+      <StudentsListStack.Screen name="StudentDetailsPage" component={StudentDetailsPage} options={{title:'Student Details'}}/>
+      <StudentsListStack.Screen name="StudentAddPage" component={StudentAddPage} options={{title:'Add New Student'}}/>
+
+    </StudentsListStack.Navigator>
+  )
+}
 export default function App() {
 
   return(
-  <View style = {styles.container}>
-    <StudentList />
-  </View>
+  <NavigationContainer>
+    
+    <Tab.Navigator>
+      <Tab.Screen 
+        name="StudentsListScreen" 
+        component={StudentsListScreen}
+        options={{headerShown:false}}
+      />
+      
+      <Tab.Screen 
+        name="StudentAddPage" 
+        component={StudentAddPage}
+        options={{title:'Add New Student'}}/>
+    </Tab.Navigator>
+  </NavigationContainer>
   )  
 }
   

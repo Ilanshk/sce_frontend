@@ -4,7 +4,8 @@ export type Student = {
     imageUrl: string
 }
 
-const data: Student[] = [{
+const data: Student[] = [
+  {
   id:"1",
   name:"abc",
   imageUrl:"../assets/avatar.png"
@@ -51,6 +52,7 @@ const getAllStudents = () :Student[] =>{
 }
 
 const getStudent = (id:string): Student | undefined =>{
+    console.log("trying to find...");
     return data.find((student) => student.id == id)
 }
 
@@ -64,4 +66,5 @@ const deleteStudent = (id:string)=>{
         data.splice(index,1);
     }
 }
+
 export default {getAllStudents,getStudent,addStudent,deleteStudent};
