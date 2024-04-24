@@ -1,7 +1,7 @@
 import React,{FC, useEffect, useState} from 'react';
 import{Text,FlatList, StyleSheet, Button }from 'react-native';
 import StudentListRow from './StudentListRow';
-import StudentModel,{Student} from '../Model/StudentModel';
+import StudentModel,{Student} from '../Model/PostModel';
 
 
 

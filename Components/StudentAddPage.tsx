@@ -1,6 +1,6 @@
 import { TextInput,View,Image,StyleSheet, StatusBar, TouchableOpacity,Text } from "react-native";
 import { useState,FC } from "react";
-import StudentModel, {Student} from "../Model/StudentModel"
+import StudentModel, {Student} from "../Model/PostModel"
 
 const StudentAddPage:FC<{navigation:any}> = ({navigation}) =>{
     const [name,onChangeName] = useState("");

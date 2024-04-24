@@ -1,6 +1,6 @@
 import { View,Image,StyleSheet, StatusBar,Text, Button } from "react-native";
 import { useState,FC, useEffect } from "react";
-import StudentModel from "../Model/StudentModel";
+import StudentModel from "../Model/PostModel";
 
 
 const StudentDetailsPage:FC<{route:any,navigation:any}>= ({route,navigation}) =>{
