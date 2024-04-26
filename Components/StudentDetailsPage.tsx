@@ -1,26 +1,39 @@
 import { View,Image,StyleSheet, StatusBar,Text, Button } from "react-native";
 import { useState,FC, useEffect } from "react";
-import StudentModel from "../Model/PostModel";
+import StudentModel, { Student } from "../Model/PostModel";
 
 
-const StudentDetailsPage:FC<{route:any,navigation:any}>= ({route,navigation}) =>{
-  const student = StudentModel.getStudent(route.params.id);
+const StudentDetailsPage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
+  const [student,setStudent] = useState<Student>();
+  
   useEffect(()=>{
-    navigation.setOptions({
-      title: student?.name,
-      headerRight:()=>(
-        <Button
-          onPress = {() => navigation.navigate('StudentAddPage')}
-          title = "Edit"
-        />
-      )
-    })
-  },[])
+    const fetchStudent = async () => {
+      const fetchedStudent = await StudentModel.getStudentById(route.params.id) as Student;
+      setStudent(fetchedStudent);
+    };
+
+    fetchStudent();
+  }, [route.params.id]);
+  
+  
+  useEffect(()=>{
+    if(student){
+      navigation.setOptions({
+        title: student?.name,
+        headerRight:()=>(
+          <Button
+            onPress = {() => navigation.navigate('StudentAddPage')}
+            title = "Edit"
+          />
+        )
+      })
+    }
+  },[student])
   return(
     <View style={styles.container}>
       <Image style={styles.avatar}source={require('../assets/avatar.png')}/>
       <Text style = {styles.input}>{student?.name}</Text>
-      <Text style = {styles.input}>{student?.id}</Text>
+      <Text style = {styles.input}>{student?._id}</Text>
       <Text style = {styles.input}>{student?.imageUrl}</Text>
         
           

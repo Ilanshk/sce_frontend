@@ -5,6 +5,7 @@ import StudentModel,{Student} from '../Model/PostModel';
 
 
 
+
 const StudentList : FC<{navigation:any}> = ({navigation}) => {
   const [data,setData] = useState<Student[]>([]);
   console.log(data);
@@ -13,9 +14,15 @@ const StudentList : FC<{navigation:any}> = ({navigation}) => {
     navigation.navigate('StudentDetailsPage',{id:id});
   }
   useEffect(()=>{
-    const unsubscribe = navigation.addListener('focus',()=>{
-      setData([...StudentModel.getAllStudents()])
+    const unsubscribe = navigation.addListener('focus',async()=>{
       console.log("screen in focus");
+      try{
+        const students = await StudentModel.getAllStudents();
+        setData(students)
+      }catch(err){
+        console.log("Failed to read Students from Server: "+err);
+        setData(Array<Student>())
+      }
     })
     return unsubscribe;
   },[navigation])
@@ -35,11 +42,11 @@ const StudentList : FC<{navigation:any}> = ({navigation}) => {
     <FlatList
       style={styles.flatList}
       data = {data}
-      keyExtractor={(student)=>student.id}
+      keyExtractor={(student)=>student._id}
       renderItem={({item})=> (
         <StudentListRow
           name={item.name}
-          id={item.id}
+          id={item._id}
           imgUrl={item.imageUrl}
           onItemSelected={onItemSelected}
         />    
