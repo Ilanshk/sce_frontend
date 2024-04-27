@@ -31,7 +31,7 @@ const StudentDetailsPage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
   },[student])
   return(
     <View style={styles.container}>
-      <Image style={styles.avatar}source={require('../assets/avatar.png')}/>
+      <Image style={styles.avatar}source={{uri:student?.imageUrl}}/>
       <Text style = {styles.input}>{student?.name}</Text>
       <Text style = {styles.input}>{student?._id}</Text>
       <Text style = {styles.input}>{student?.imageUrl}</Text>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         height:200,
         width:200,
         margin: 10,
-        borderRadius: 100
+        
     },
     input:{
         height:40,

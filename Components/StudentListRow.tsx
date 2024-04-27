@@ -17,7 +17,8 @@ const StudentListRow:FC<
          onPress={onPress}
          underlayColor={'grey'}>
             <View style = {styles.listrow} >
-                <Image style={styles.avatar} source={require('../assets/avatar.png')}/>
+                {imgUrl &&<Image style={styles.avatar} source={{uri:imgUrl}}/>}
+                {!imgUrl &&<Image style={styles.avatar} source={require("../assets/avatar.png")}/>}
                 <View style={styles.info}>
                     <Text style={styles.name}>{name}</Text>
                     <Text style={styles.id}>{id}</Text>
