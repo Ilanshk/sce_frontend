@@ -39,9 +39,9 @@ export default function App() {
       />
       
       <Tab.Screen 
-        name="StudentAddPage" 
+        name="Profile" 
         component={StudentAddPage}
-        options={{title:'Add New Student'}}/>
+        options={{title:'My Profile'}}/>
     </Tab.Navigator>
   </NavigationContainer>
   )  

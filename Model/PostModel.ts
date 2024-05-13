@@ -50,10 +50,13 @@ const data: Student[] = [
 }
 ];
 
-const getAllStudents = async() =>{
+const getAllStudents = async(accessToken:string) =>{
   console.log("get all students")
+  console.log("access token received: "+accessToken)
   try{
-    const responseStudents:any = await PostApi.getAllStudents();
+    const responseStudents:any = await PostApi.getAllStudents(accessToken);
+    console.log("Post Model - getAllStudents()"+responseStudents.data);
+    
     let students = Array<Student>();
     //console.log("aaa",responseStudents);
     

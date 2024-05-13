@@ -1,16 +1,16 @@
 import { Student } from "../Model/PostModel";
 import ApiClient from "./ClientApi"
 //This file includes all the requests we send to the server
-const getAllStudents = async() =>{
+const getAllStudents = async(accessToken:string) =>{
     //console.log("PostApi.ts");
     
-    const loginResponse = await ApiClient.post("/auth/login",{email:"bob@gmail.com",password:"123456"});
-    const tokens = loginResponse.data as {accessToken:string,refreshToken:string}
-    //console.log("Tokens:",tokens);
+    //const loginResponse = await ApiClient.post("/auth/login",{email:"bob@gmail.com",password:"123456"});
+    //const tokens = loginResponse.data as {accessToken:string,refreshToken:string}
+    console.log("Token for getting all students:",accessToken);
     
-    ApiClient.setHeader('Authorization',`Bearer ${tokens.accessToken}`);
-    const res = await ApiClient.get("/student")
-    //console.log("Response: ",res);
+    ApiClient.setHeaders({'authorization':'bearer ' +accessToken})
+    const res = await ApiClient.get("/student/") //,{headers:{'authorization': 'Bearer '+accessToken}}
+    console.log("Response: ",res);
     return res;
     
     

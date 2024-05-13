@@ -6,7 +6,7 @@ import StudentModel,{Student} from '../Model/PostModel';
 
 
 
-const StudentList : FC<{navigation:any}> = ({navigation}) => {
+const StudentList : FC<{navigation:any,route:any}> = ({navigation,route}) => {
   const [data,setData] = useState<Student[]>([]);
   console.log(data);
   const onItemSelected = (id:string) =>{
@@ -17,7 +17,7 @@ const StudentList : FC<{navigation:any}> = ({navigation}) => {
     const unsubscribe = navigation.addListener('focus',async()=>{
       console.log("screen in focus");
       try{
-        const students = await StudentModel.getAllStudents();
+        const students = await StudentModel.getAllStudents(route.params.accessToken);
         setData(students)
       }catch(err){
         console.log("Failed to read Students from Server: "+err);
