@@ -3,6 +3,7 @@ import { useState,FC, useEffect } from "react";
 import { Fontisto } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import AddPictureApi from "../Api/AddPictureApi";
+import StudentModel,{ Student } from "../Model/PostModel";
 
 const StudentAddPage:FC<{navigation:any}> = ({navigation}) =>{
     const [name,onChangeName] = useState("");
@@ -47,7 +48,14 @@ const StudentAddPage:FC<{navigation:any}> = ({navigation}) =>{
 
     const handleOnSave = async () =>{
       try{
-         await AddPictureApi.onSave(imageUrl,name,id);
+        const urlImageOfUser = await AddPictureApi.onSave(imageUrl);
+        const student:Student = {
+          _id:id,
+          name:name,
+          imageUrl:urlImageOfUser
+         };
+         console.log("Add new student to the model");
+         StudentModel.addStudent(student);
          navigation.navigate('StudentList'); 
       }
       catch(error){

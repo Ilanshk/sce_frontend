@@ -28,7 +28,7 @@ const addStudent = async(studentJson:Student) =>{
 const uploadImage = async (image:any) =>{
     console.log("Calling to server with parameter: "+image);
     const res= await ApiClient.post("/file/file",image,{headers:{"Content-Type":'multipart/form-data'}});
-    console.log("Server response: ",res.data);
+    console.log("Server response-url for image uploaded: ",res.data);
     return res;
     
 

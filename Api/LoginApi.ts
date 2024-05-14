@@ -10,7 +10,7 @@ const loginWithEmailAndPassword = async(email:string,password:string) =>{
     console.log("username: "+email);
     console.log("password: "+password);
     const res:any = await apiClient.post("/auth/login",{email:email,password:password});
-    console.log("Server login with email and password:"+res.data.accessToken);//server has to return tokens
+    console.log("Server login with email and password:"+res.data);//server has to return tokens
     return res;
     
 }

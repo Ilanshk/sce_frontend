@@ -1,5 +1,5 @@
 import {Button,View,Text,TextInput,StyleSheet, TouchableOpacity,Image, StatusBar, ScrollView} from 'react-native';
-import { useState,FC } from 'react';
+import { useState,FC, useEffect } from 'react';
 import RegisterApi from '../Api/RegisterApi';
 import { Feather } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
@@ -7,32 +7,43 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import AddPictureApi from '../Api/AddPictureApi';
 
 const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
-    const [userEmail,setUserEmail] = useState("");
-    const [userPassword,setUserPassword] = useState("");
+    const [userEmail,setUserEmail] = useState<string>("");
+    const [userPassword,setUserPassword] = useState<string>("");
     const [userImage,setUserImage] = useState<string>("");
+    const [userAge,setUserAge] = useState<string>("");
+    const [userCountry,setUserCountry] = useState<string>("");
 
-    const handleUserRegister = async (newUserDetails:{email:string,password:string,url:string}) =>{
-        const userImageUrl = await AddPictureApi.onSave(newUserDetails.url);
-        const resUserRegister = await RegisterApi.registerUser(newUserDetails.email,newUserDetails.password,userImageUrl)
+    useEffect(()=>{AddPictureApi.askCameraPermission()},[]);
+
+    const handleUserRegister = async () =>{
+        const userImageUrl:string = await AddPictureApi.onSave(userImage);
+        console.log("handleUserRegister()--->url = "+userImageUrl);
+        
+        const resUserRegister = await RegisterApi.registerUser(userEmail,userPassword,userImageUrl,userAge,userCountry);
         //User already exists in the application or email/password is missing
         if(resUserRegister.status == 409){
             setUserEmail("");
             setUserPassword("");
+            setUserAge("");
+            setUserCountry("");
             return alert("A user with that email already exists");  
         }
         //User did not provide email or password
         if(resUserRegister.status == 400){
             setUserEmail("");
             setUserPassword("");
+            setUserAge("");
+            setUserCountry("");
             return alert("Email or Password is missing");
         }
+       
         if(resUserRegister.data.userTokens.accessToken){
             navigation.navigate('StudentList',{accessToken:resUserRegister.data.userTokens.accessToken})
         }
     }
     return (
-        // <ScrollView>
-            <View style = {styles.registrationPage}>
+        <View style = {styles.registrationPage}>
+            <ScrollView style = {styles.scrollView} >
                 <View style = {styles.heading}>
                     <Text style={styles.welcomeMessage}>
                         Welcome to Travmies!
@@ -67,8 +78,8 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
                     </TouchableOpacity>
                 </View>
                 <View style={styles.registerDetails}>
-                    <View style={styles.email}>
-                            <Text style={styles.fieldTitle}>Email</Text>
+                    <View style={styles.userdetail}>
+                            <Text>Email</Text>
                             <TextInput style={styles.input}
                                 value={userEmail}
                                 onChangeText={setUserEmail}
@@ -77,8 +88,8 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
                             ></TextInput>
                     </View>
 
-                    <View style={styles.password}>
-                            <Text style={styles.fieldTitle}>Password</Text>
+                    <View style={styles.userdetail}>
+                            <Text>Password</Text>
                             <TextInput style={styles.input}
                                 value={userPassword}
                                 textContentType='password'
@@ -87,22 +98,38 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
                                 placeholder="Your Password goes here..."
                             ></TextInput>
                     </View>
+
+                    <View style={styles.userdetail}>
+                            <Text>Age</Text>
+                            <TextInput style={styles.input}
+                                value={userAge}
+                                onChangeText={setUserAge}
+                                placeholder="Your Age"
+                            ></TextInput>
+                    </View>
+
+                    <View style={styles.userdetail}>
+                            <Text>State</Text>
+                            <TextInput style={styles.input}
+                                value={userCountry}
+                                onChangeText={setUserCountry}
+                                placeholder="Your State"
+                                textContentType='countryName'
+                            ></TextInput>
+                    </View>
                     
                 </View>
                 <View style={styles.registerBtn}>
                     <Text style={styles.registerText}>Register</Text>
                     <Feather name="arrow-right-circle" size={44} color="black"
-                        onPress={async()=>{
-                            await handleUserRegister({
-                                email: userEmail,
-                                password:userPassword,
-                                url:userImage
-                            })
-                        }}
+                        onPress={()=>handleUserRegister()}
                         style={styles.registerArrow}
                     />
                 </View>
-            </View>
+            </ScrollView>
+        </View>
+        
+        
     )
 }
 
@@ -113,6 +140,10 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         //alignItems:'center',
         //backgroundColor:'#80f28a94'
+    },
+    scrollView:{
+        marginHorizontal: 10,
+        backgroundColor:'white'
     },
     heading:{
         //top:20,
@@ -128,21 +159,19 @@ const styles = StyleSheet.create({
     },
     registerDetails:{
         flexDirection:'column',
-        alignSelf:'center'
+        alignSelf:'center',
+        height:300
 
     },
-    email:{
+    userdetail:{
         top:30,
         flexDirection:'column',
         bottom:15
     },
     password:{
-        top:50,
+        top:30,
         flexDirection:'column',
-        bottom:10
-    },
-    fieldTitle:{
-        bottom:10
+        bottom:15
     },
     input:{
         width:300,
@@ -181,7 +210,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',
-        top:60,
+        top:0,
         left:40
     },
     registerArrow:{

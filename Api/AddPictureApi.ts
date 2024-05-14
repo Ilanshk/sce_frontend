@@ -43,20 +43,18 @@ const openGallery = async() =>{
 }
 
 
-const onSave = async(imgUrl:string,name:string,id:string) =>{
+const onSave = async(imgUrl:string) =>{
     console.log('save button was pressed');
-    const student: Student = {
-        name:name,
-        _id:id,
-        imageUrl:""
-    }
+    // const student: Student = {
+    //     name:name,
+    //     _id:id,
+    //     imageUrl:""
+    // }
     try{
         console.log("uploading image");
         const url = await StudentModel.uploadImage(imgUrl);
-        student.imageUrl = url
-        console.log("got url from upload at StudentAddPage: " + url);
-        console.log("saving student");
-        StudentModel.addStudent(student);
+        //StudentModel.addStudent(student);
+        return url;
     }catch(err){
       console.log("Error in onSave() "+err);
       
