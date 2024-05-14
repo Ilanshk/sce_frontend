@@ -1,86 +1,59 @@
 import { TextInput,View,Image,StyleSheet, StatusBar, TouchableOpacity,Text, ScrollView } from "react-native";
 import { useState,FC, useEffect } from "react";
-import StudentModel, {Student} from "../Model/PostModel"
-import * as ImagePicker from 'expo-image-picker';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { Fontisto } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
+import AddPictureApi from "../Api/AddPictureApi";
 
 const StudentAddPage:FC<{navigation:any}> = ({navigation}) =>{
     const [name,onChangeName] = useState("");
     const [id,onChangeId] = useState("");
     const [address,onChangeAddress] = useState("");
-    const [imageUrl,setImageUrl] = useState("");
+    const [imageUrl,setImageUrl] = useState<string>("");
 
-    const onSave = async() =>{
-      //const url = await StudentModel.uploadImage(imageUrl);
-      //console.log("url at onSave(): " +url);
-      console.log('save button was pressed');
-        const student:Student = {
-          name:name,
-          _id:id,
-          imageUrl:""
-        }
-      try{
-        if(imageUrl != ""){
-          console.log("uploading image");
-          const url = await StudentModel.uploadImage(imageUrl);
-          student.imageUrl = url
-          console.log("got url from upload at StudentAddPage: " + url);
-          console.log("saving student");
-          StudentModel.addStudent(student);
-        }
-          navigation.navigate('StudentList');
-      }catch(err){
-        console.log("Error in onSave() "+err);
-        
-      }
-    }
-    const onCancel = () =>{
-        console.log('Cancel');
-        navigation.navigate('StudentList');
-
-    }
-    const askCameraPermission = async() =>{
-      try{
-        const res= await ImagePicker.requestCameraPermissionsAsync();
-          if(!res.granted){
-            alert("You need to approve camera permission")
-          }
-      }catch(err){
-        console.log("Ask Camera Permission Error:" +err)
-      }
-    }
+    
     useEffect(()=>{
-      askCameraPermission();
+      AddPictureApi.askCameraPermission();
     },[])
 
-    const activateCamera = async() =>{
-      try{
-        const response = await ImagePicker.launchCameraAsync();
-        if(!response.canceled && response.assets.length > 0){
-          const uri = response.assets[0].uri;
-          console.log("activateCamera()-uri= "+uri);
-          setImageUrl(uri);
-        }
-      }catch(err){
-        console.log("Error while opening device camera: "+err);
-        
-      }
-      
+  
+    const handleOnCancel = () =>{
+      console.log('Cancel');
+      navigation.navigate('StudentList');
     }
 
-    const openGallery = async() =>{
+
+    const handleActivateCamera = async()=>{
       try{
-        const response = await ImagePicker.launchImageLibraryAsync();
-        if(!response.canceled && response.assets.length > 0){
-          const uri = response.assets[0].uri;
-          setImageUrl(uri);
+        const uriCamera= await AddPictureApi.activateCamera();
+        if(uriCamera){
+          setImageUrl(uriCamera);
         }
-      }catch(err){
-        console.log("Error while opening device camera: "+err);
+      }catch(error){
+        console.log("Error in activating camera: "+error);
         
       }
+    }
+
+    const handleOpenGallery = async() =>{
+      try{
+        const uriGallery= await AddPictureApi.openGallery();
+        if(uriGallery){
+          setImageUrl(uriGallery);
+        }
+      }catch(error){
+        console.log("Error in opening gallery: "+error);
+      }
+    }
+
+    const handleOnSave = async () =>{
+      try{
+         await AddPictureApi.onSave(imageUrl,name,id);
+         navigation.navigate('StudentList'); 
+      }
+      catch(error){
+         console.log("Error saving new student: "+error)
+      }
+
     }
     
     return(
@@ -90,12 +63,12 @@ const StudentAddPage:FC<{navigation:any}> = ({navigation}) =>{
             {imageUrl == "" &&<Image style={styles.avatar}source={require('../assets/avatar.png')}/>}
             {imageUrl != "" && <Image source={{uri:imageUrl}} style={styles.avatar}/>}
             <TouchableOpacity
-              onPress={activateCamera}
+              onPress={handleActivateCamera}
             >
               <Fontisto name="camera" size={24} color="black" style={styles.cameraButton} />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={openGallery}
+              onPress={handleOpenGallery}
             >
               <FontAwesome6 name="image" size={24} color="black" style={styles.galleryButton} />
             </TouchableOpacity>
@@ -120,10 +93,12 @@ const StudentAddPage:FC<{navigation:any}> = ({navigation}) =>{
             placeholder="Enter Your Address"
           />
         <View style={styles.buttons}>
-          <TouchableOpacity style={styles.button} onPress={onCancel}>
+          <TouchableOpacity style={styles.button} 
+            onPress={handleOnCancel}>
             <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={onSave}>
+          <TouchableOpacity style={styles.button} 
+            onPress={handleOnSave}>
             <Text style={styles.buttonText}>Save</Text>
           </TouchableOpacity>
         </View>

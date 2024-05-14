@@ -20,7 +20,6 @@ const activateCamera = async() =>{
       if(!response.canceled && response.assets.length > 0){
         const uri = response.assets[0].uri;
         console.log("activateCamera()-uri= "+uri);
-        //setImageUrl(uri);
         return uri;
       }
     }catch(err){
@@ -35,7 +34,6 @@ const openGallery = async() =>{
       const response = await ImagePicker.launchImageLibraryAsync();
       if(!response.canceled && response.assets.length > 0){
         const uri = response.assets[0].uri;
-        //setImageUrl(uri);
         return uri;
       }
     }catch(err){
@@ -45,24 +43,20 @@ const openGallery = async() =>{
 }
 
 
-const onSave = async(imgUrl:string) =>{
+const onSave = async(imgUrl:string,name:string,id:string) =>{
     console.log('save button was pressed');
     const student: Student = {
-        name:"",
-        _id:"",
+        name:name,
+        _id:id,
         imageUrl:""
     }
     try{
-      if(student.imageUrl == ""){
         console.log("uploading image");
         const url = await StudentModel.uploadImage(imgUrl);
         student.imageUrl = url
         console.log("got url from upload at StudentAddPage: " + url);
         console.log("saving student");
         StudentModel.addStudent(student);
-        return url;
-      }
-        //navigation.navigate('StudentList');
     }catch(err){
       console.log("Error in onSave() "+err);
       
