@@ -1,5 +1,6 @@
 import PostApi from "../Api/PostApi";
 import FormData from 'form-data';
+import mime from "mime";
 
 export type Student = {
     name: string,
@@ -105,7 +106,11 @@ const deleteStudent = (id:string)=>{
 
 const uploadImage = async(imageUri:string) =>{
   let body = new FormData();
-  body.append('file', {name:'name',type:'image/jpeg',uri: imageUri});
+  
+  body.append('file', 
+    {name:'file',
+    type:mime.getType(imageUri),
+    uri:imageUri });
   try{
     const res = await PostApi.uploadImage(body);
     if(!res.ok){
@@ -113,7 +118,7 @@ const uploadImage = async(imageUri:string) =>{
     }else{
       if(res.data){
         const d:any = res.data;
-        console.log(">>>>url = "+d.url)
+        //console.log(">>>>url = "+d.url)
         return d.url;
       }
     }

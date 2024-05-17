@@ -10,6 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const StudentList : FC<{navigation:any,route:any}> = ({navigation,route}) => {
   const [data,setData] = useState<Student[]>([]);
+  const[currentUser,setCurrentUser] = useState("");
   console.log(data);
   const onItemSelected = (id:string) =>{
     console.log("Item selected: "+id);
@@ -29,16 +30,20 @@ const StudentList : FC<{navigation:any,route:any}> = ({navigation,route}) => {
     return unsubscribe;
   },[navigation])
 
-
+  useEffect(()=>{
+    if(route.params?.user){
+      setCurrentUser(JSON.stringify(route.params.user))
+    }
+  },[route.params?.user])
   useEffect(()=>{
     navigation.setOptions({
       headerRight: () =>(
         <MaterialCommunityIcons name="account-details" size={44} color="black"
         onPress={() => navigation.navigate('StudentAddPage')} />
-        
       )
     })
   },[])
+
   return (
     <View style={styles.postPage}>
       <View style={styles.addPost}>

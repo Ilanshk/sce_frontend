@@ -18,9 +18,9 @@ const StudentsListStack = createNativeStackNavigator();
 const StudentsListScreen :FC = () =>{
   return(
     <StudentsListStack.Navigator>
-      <StudentsListStack.Screen name="RegisterPage" component={RegisterPage} options={{title:'Register to Travmies'}}/>
       <StudentsListStack.Screen name="Log In Page" component={LoginPage} options={{title:'Welcome to Travmies'}}/>
-      <StudentsListStack.Screen name="StudentList" component={StudentList} options={{title:'Students List'}}/>
+      <StudentsListStack.Screen name="RegisterPage" component={RegisterPage} options={{title:'Register to Travmies'}}/>
+      <StudentsListStack.Screen name="StudentList" component={StudentList} options={{headerTitle: (props) =><Text>`Welcome,${props.children}</Text>}}/>
       <StudentsListStack.Screen name="StudentDetailsPage" component={StudentDetailsPage} options={{title:'Student Details'}}/>
       <StudentsListStack.Screen name="StudentAddPage" component={StudentAddPage} options={{title:'Add New Student'}}/>
 

@@ -12,33 +12,38 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
     const [userImage,setUserImage] = useState<string>("");
     const [userAge,setUserAge] = useState<string>("");
     const [userCountry,setUserCountry] = useState<string>("");
+    const[firstName,setFirstName] = useState<string>("");
+    const [lastName,setLastName] = useState<string>("");
 
     useEffect(()=>{AddPictureApi.askCameraPermission()},[]);
 
+    const handleErrorInRegistration = () =>{
+        setFirstName("");
+        setLastName("");
+        setUserEmail("");
+        setUserPassword("");
+        setUserAge("");
+        setUserCountry("");
+    }
+
     const handleUserRegister = async () =>{
-        const userImageUrl:string = await AddPictureApi.onSave(userImage);
+        const userImageUrl = await AddPictureApi.onSave(userImage);
         console.log("handleUserRegister()--->url = "+userImageUrl);
         
-        const resUserRegister = await RegisterApi.registerUser(userEmail,userPassword,userImageUrl,userAge,userCountry);
+        const resUserRegister = await RegisterApi.registerUser(firstName,lastName,userEmail,userPassword,userImageUrl,userAge,userCountry);
         //User already exists in the application or email/password is missing
         if(resUserRegister.status == 409){
-            setUserEmail("");
-            setUserPassword("");
-            setUserAge("");
-            setUserCountry("");
+            handleErrorInRegistration();
             return alert("A user with that email already exists");  
         }
         //User did not provide email or password
         if(resUserRegister.status == 400){
-            setUserEmail("");
-            setUserPassword("");
-            setUserAge("");
-            setUserCountry("");
-            return alert("Email or Password is missing");
+            handleErrorInRegistration();
+            return alert("One of the details is missing");
         }
        
         if(resUserRegister.data.userTokens.accessToken){
-            navigation.navigate('StudentList',{accessToken:resUserRegister.data.userTokens.accessToken})
+            navigation.navigate('StudentList',{accessToken:resUserRegister.data.userTokens.accessToken,userName:firstName+lastName})
         }
     }
     return (
@@ -79,6 +84,24 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
                 </View>
                 <View style={styles.registerDetails}>
                     <View style={styles.userdetail}>
+                                <Text>First Name</Text>
+                                <TextInput style={styles.input}
+                                    value={firstName}
+                                    onChangeText={setFirstName}
+                                    placeholder="First Name..."
+                                    textContentType='name'
+                                ></TextInput>
+                    </View>
+                    <View style={styles.userdetail}>
+                                <Text>Last Name</Text>
+                                <TextInput style={styles.input}
+                                    value={lastName}
+                                    onChangeText={setLastName}
+                                    placeholder="Last Name..."
+                                    textContentType='name'
+                                ></TextInput>
+                    </View>
+                    <View style={styles.userdetail}>
                             <Text>Email</Text>
                             <TextInput style={styles.input}
                                 value={userEmail}
@@ -109,11 +132,11 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
                     </View>
 
                     <View style={styles.userdetail}>
-                            <Text>State</Text>
+                            <Text>Country</Text>
                             <TextInput style={styles.input}
                                 value={userCountry}
                                 onChangeText={setUserCountry}
-                                placeholder="Your State"
+                                placeholder="Your Country"
                                 textContentType='countryName'
                             ></TextInput>
                     </View>
@@ -121,8 +144,8 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
                 </View>
                 <View style={styles.registerBtn}>
                     <Text style={styles.registerText}>Register</Text>
-                    <Feather name="arrow-right-circle" size={44} color="black"
-                        onPress={()=>handleUserRegister()}
+                    <Feather name="arrow-right-circle" size={44} color="green"
+                        onPress={handleUserRegister}
                         style={styles.registerArrow}
                     />
                 </View>
@@ -160,7 +183,7 @@ const styles = StyleSheet.create({
     registerDetails:{
         flexDirection:'column',
         alignSelf:'center',
-        height:300
+        height:400
 
     },
     userdetail:{
