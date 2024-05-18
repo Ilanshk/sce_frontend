@@ -2,7 +2,6 @@ import LoginApi from "../Api/LoginApi";
 import {View,StyleSheet,Text,TextInput,Button, ImageBackground} from 'react-native'
 import { FC,useEffect, useState } from "react";
 import {GoogleSignin,GoogleSigninButton} from "@react-native-google-signin/google-signin";
-import StudentList from "./StudentList";
 import { Feather } from '@expo/vector-icons';
 
 const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
@@ -49,10 +48,10 @@ const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
 
     const handleLoginWithEmailAndPassword = async (userDetails:{email:string,password:string}) =>{
         const res =  await LoginApi.loginWithEmailAndPassword(userDetails.email,userDetails.password);
-        if(res.data.accessToken){
-            console.log("access Token: "+res.data.accessToken);
+        if(res.ok){
+            navigation.navigate('StudentList',{accessToken:res.data.accessToken,user:res.data.userName})
+            console.log('Navigating to home page...');
             
-            navigation.navigate('StudentList',{accessToken:res.data.accessToken})
         }
     }
 

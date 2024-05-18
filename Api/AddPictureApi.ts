@@ -1,5 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
-import StudentModel,{Student} from "../Model/PostModel"
+import PostModel,{Post} from "../Model/PostModel"
 
 
 const askCameraPermission = async() =>{
@@ -52,7 +52,7 @@ const onSave = async(imgUrl:string) =>{
     // }
     try{
         console.log("uploading image");
-        const url = await StudentModel.uploadImage(imgUrl);
+        const url = await PostModel.uploadImage(imgUrl);
         //StudentModel.addStudent(student);
         return url;
     }catch(err){

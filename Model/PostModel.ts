@@ -2,105 +2,65 @@ import PostApi from "../Api/PostApi";
 import FormData from 'form-data';
 import mime from "mime";
 
-export type Student = {
-    name: string,
-    _id: string,
-    imageUrl: string
+export type Post = {
+    _id:string,
+    postText: string,
+    owner:string
+    postImageUrl: string,
 }
 
-const data: Student[] = [
-  {
-  _id:"1",
-  name:"abc",
-  imageUrl:"../assets/avatar.png"
-},
-{
-  _id:"2",
-  name:"ab",
-  imageUrl:"../assets/avatar.png"
-},
-{
-  _id:"3",
-  name:"abce",
-  imageUrl:"../assets/avatar.png"
-},
-{
-  _id:"4",
-  name:"abbbbc",
-  imageUrl:"../assets/avatar.png"
-},
-{
-  _id:"5",
-  name:"ERT",
-  imageUrl:"../assets/avatar.png"
-},
-{
-  _id:"6",
-  name:"QWA",
-  imageUrl:"../assets/avatar.png"
-},
-{
-  _id:"7",
-  name:"SHO",
-  imageUrl:"../assets/avatar.png"
-},
-{
-  _id:"8",
-  name:"NKI",
-  imageUrl:"../assets/avatar.png"
-}
-];
 
-const getAllStudents = async(accessToken:string) =>{
-  console.log("get all students")
-  
+const getAllPosts = async(accessToken:string) =>{
+  console.log("get all posts")
   try{
-    const responseStudents:any = await PostApi.getAllStudents(accessToken);
-    
-    let students = Array<Student>();
-    
+    const responseStudents:any = await PostApi.getAllPosts(accessToken);
+    let posts = Array<Post>();
     if(responseStudents.data){
-      responseStudents.data.forEach((s:Student)=>{
-        const student: Student = {
-          name:s.name,
-          _id:s._id,
-          imageUrl:s.imageUrl
+      responseStudents.data.forEach((p:Post)=>{
+        const post: Post = {
+          _id:p._id,
+          postText:p.postText,
+          owner:p.owner,
+          postImageUrl:p.postImageUrl
         }
-        students.push(student);
+        posts.push(post);
       });
     }
-    return students; 
+    return posts; 
   }catch(err){
     console.log("Failed Reading Posts from server: "+err);
-    return Array<Student>();
+    return Array<Post>();
   }
-  
 }
 
-const getStudentById = async(id:string) =>{
-    console.log("trying to find...");
+const getPostById = async(id:string) =>{
+    console.log("Get Post By Id");
     const studentResponse = await PostApi.getStudentById(id);
     return studentResponse.data;
 }
 
-const addStudent = async(student:Student) =>{
+const addPost = async(post:Post) =>{
     console.log('addStudent');
     const data = {
-      _id:student._id,
-      name:student.name,
-      imageUrl:student.imageUrl
+      _id:post._id,
+      postText:post.postText,
+      owner:post.owner,
+      postImageUrl:post.postImageUrl
     }
     try{
-      const res = await PostApi.addStudent(data);
+      const res = await PostApi.addPost(data);
     }catch(err){
       console.log("add student failed");
     }
 }
 
-const deleteStudent = (id:string)=>{
-    const index = data.findIndex((student) => student._id == id);
-    if(index!= -1){
-        data.splice(index,1);
+const deletePost = async(id:string)=>{
+    try{
+      const response = await PostApi.deletePost(id);
+      return response;
+    }
+    catch(error){
+      console.log("Error deleting post: "+error);
     }
 }
 
@@ -118,7 +78,6 @@ const uploadImage = async(imageUri:string) =>{
     }else{
       if(res.data){
         const d:any = res.data;
-        //console.log(">>>>url = "+d.url)
         return d.url;
       }
     }
@@ -129,4 +88,4 @@ const uploadImage = async(imageUri:string) =>{
 }
 
 
-export default {getAllStudents,getStudentById,addStudent,deleteStudent,uploadImage};
+export default {getAllPosts,getPostById,addPost,deletePost,uploadImage};

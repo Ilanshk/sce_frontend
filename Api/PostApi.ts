@@ -1,7 +1,7 @@
-import { Student } from "../Model/PostModel";
+import { Post } from "../Model/PostModel";
 import ApiClient from "./ClientApi"
 //This file includes all the requests we send to the server
-const getAllStudents = async(accessToken:string) =>{
+const getAllPosts = async(accessToken:string) =>{
     //console.log("PostApi.ts");
     
     //const loginResponse = await ApiClient.post("/auth/login",{email:"bob@gmail.com",password:"123456"});
@@ -9,7 +9,7 @@ const getAllStudents = async(accessToken:string) =>{
     console.log("Token for getting all students:",accessToken);
     
     ApiClient.setHeaders({'authorization':'bearer ' +accessToken})
-    const res = await ApiClient.get("/student/") //,{headers:{'authorization': 'Bearer '+accessToken}}
+    const res = await ApiClient.get("/post/") //,{headers:{'authorization': 'Bearer '+accessToken}}
     console.log("Response: ",res);
     return res;
     
@@ -21,8 +21,8 @@ const getStudentById = (id:string) =>{
     return ApiClient.get("/student/"+id);
 }
 
-const addStudent = async(studentJson:Student) =>{
-    return await ApiClient.post("/student",studentJson)
+const addPost = async(postJson:Post) =>{
+    return await ApiClient.post("/post",postJson);
 }
 
 const uploadImage = async (image:any) =>{
@@ -34,4 +34,9 @@ const uploadImage = async (image:any) =>{
 
 }
 
-export default{getAllStudents,getStudentById,addStudent,uploadImage};
+const deletePost = async (postId:string) =>{
+    const deleteResponse = await ApiClient.delete("/post",{id:postId});
+    return deleteResponse;
+}
+
+export default{getAllPosts,getStudentById,addPost,uploadImage,deletePost};

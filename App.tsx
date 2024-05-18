@@ -1,9 +1,9 @@
 import { StyleSheet,Button, Text, View, Image,Alert, TouchableOpacity, Pressable,Platform, TextInput,StatusBar } from 'react-native';
 import React,{FC, useState} from 'react';
-import StudentList from './Components/StudentList';
+import HomePage from './Components/HomePage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import StudentAddPage from './Components/StudentAddPage';
+import PostAddPage from './Components/PostAddPage';
 import StudentDetailsPage from './Components/StudentDetailsPage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LoginPage from './Components/LoginPage';
@@ -20,9 +20,9 @@ const StudentsListScreen :FC = () =>{
     <StudentsListStack.Navigator>
       <StudentsListStack.Screen name="Log In Page" component={LoginPage} options={{title:'Welcome to Travmies'}}/>
       <StudentsListStack.Screen name="RegisterPage" component={RegisterPage} options={{title:'Register to Travmies'}}/>
-      <StudentsListStack.Screen name="StudentList" component={StudentList} options={{headerTitle: (props) =><Text>`Welcome,${props.children}</Text>}}/>
+      <StudentsListStack.Screen name="StudentList" component={HomePage} options={{title:'Home'}}/>
       <StudentsListStack.Screen name="StudentDetailsPage" component={StudentDetailsPage} options={{title:'Student Details'}}/>
-      <StudentsListStack.Screen name="StudentAddPage" component={StudentAddPage} options={{title:'Add New Student'}}/>
+      <StudentsListStack.Screen name="StudentAddPage" component={PostAddPage} options={{title:'Add New Student'}}/>
 
     </StudentsListStack.Navigator>
   )
