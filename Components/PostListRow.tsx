@@ -2,7 +2,7 @@ import { StyleSheet,Button, Text, View, Image,Alert, TouchableOpacity, Pressable
 import React,{FC, useEffect, useState} from 'react';
 
 
-const StudentListRow:FC<
+const PostListRow:FC<
     {idPostOwner:string,
     idPost:string,
     imgUrl:string,
@@ -26,14 +26,14 @@ const StudentListRow:FC<
     return(
         <TouchableHighlight
          onPress={onPress}
-         underlayColor={'grey'}>
+         underlayColor={'gray'}>
             <View style = {styles.listrow}>
               <View style={styles.user}>
                 {imgUrl &&<Image style={styles.avatar} source={{uri:imgUrl}}/>}
                 {!imgUrl &&<Image style={styles.avatar} source={require("../assets/avatar.png")}/>}
                 <Text style={styles.name}>{owner}</Text>
               </View>
-                <View style={styles.info}>
+                <View>
                     <Text style={styles.content}>{content}</Text>
                 </View>
             </View>
@@ -44,46 +44,33 @@ const StudentListRow:FC<
 const styles = StyleSheet.create({
   listrow:{
     flexDirection:'column',
-    marginHorizontal:5,
-    marginVertical:1,
+    marginHorizontal:7,
+    marginVertical:5,
     elevation :1,
-    borderWidth:1,
-    
-    //borderRadius:2
-    
+    borderWidth:2,
+    borderColor:'#18c5d9'
+  },
+  user:{
+    flexDirection:'row',
+    alignItems:'center'
   },
   avatar:{
     alignSelf:'center',
-    height:100,
-    width:100,
+    height:80,
+    width:80,
     margin: 10,
-    borderRadius: 100
-  },
-  info:{
-    flexDirection:'row',
-    justifyContent:'center',
-    alignItems:'center'
-  },
-  id:{
-    fontSize:20,
-    //marginVertical:10
-    marginBottom:5
+    borderRadius: 10
   },
   name:{
     fontSize:25,
-    //marginVertical:10,
-    marginBottom:5,
+    marginBottom:15,
     fontWeight:'bold'
   },
   content:{
     fontStyle:'normal',
     fontSize:20,
-    fontWeight:'bold',
-    left:0
   },
-  user:{
-    flexDirection:'row'
-  }
+  
 });
 
-export default StudentListRow;
+export default PostListRow;
