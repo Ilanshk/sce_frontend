@@ -1,7 +1,8 @@
 import React,{FC, useEffect, useState} from 'react';
 import{Text,FlatList, StyleSheet, Button,View }from 'react-native';
-import StudentListRow from './StudentListRow';
+import PostListRow from './PostListRow';
 import PostModel,{Post} from '../Model/PostModel';
+import userModel from '../Model/userModel';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -44,6 +45,15 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
     })
   },[])
 
+  const getOwnerName = async(userId:string) =>{
+    try{
+      const res = await userModel.getUserName(userId);
+      return res;
+    }catch(error){
+      console.log("Error in getting user's full name: "+error)
+    }
+  }
+
   return (
     <View style={styles.postPage}>
       <Text style={styles.helloUser}>Hello,{currentUser}</Text>
@@ -52,19 +62,20 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
             size={34} 
             color="black"
             onPress={()=>navigation.navigate('StudentAddPage',{owner:currentUser})}
-                  />
+        />
       </View>
     <FlatList
       style={styles.flatList}
       data = {data}
       keyExtractor={(post)=>post._id}
       renderItem={({item})=> (
-        <StudentListRow
-          name={item.owner}
-          id={item._id}
+        <PostListRow
+          idPostOwner={item.owner}
+          idPost={item._id}
           imgUrl={item.postImageUrl}
           content = {item.postText}
           onItemSelected={onItemSelected}
+          getFullName={getOwnerName}
         />    
       )}
     ></FlatList>
