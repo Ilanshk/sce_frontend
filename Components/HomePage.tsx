@@ -31,24 +31,24 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
   },[navigation])
 
   useEffect(()=>{
-    if(route.params?.user){
-      setCurrentUser(route.params.user)
+    if(route.params?.userName){
+      setCurrentUser(route.params.userName)
     }
-  },[route.params?.user])
+  },[route.params?.userName])
 
   useEffect(()=>{
     navigation.setOptions({
       headerRight: () =>(
         <MaterialCommunityIcons name="account-details" size={44} color="black"
-        onPress={() => navigation.navigate('StudentAddPage',{owner:currentUser})} />
+        onPress={() => navigation.navigate('StudentDetailsPage',{id:route.params.userId})} />
       )
     })
   },[])
 
   const getOwnerName = async(userId:string) =>{
     try{
-      const res = await userModel.getUserName(userId);
-      return res;
+      const res:any = await userModel.getUserById(userId);
+      return res.firstName + " " + res.lastName;
     }catch(error){
       console.log("Error in getting user's full name: "+error)
     }

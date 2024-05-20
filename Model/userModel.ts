@@ -7,14 +7,20 @@ export type User = {
     lastName:string,
     email: string,
     password: string,
-    imageUrl: string
-    userAge:String,
-    userCountry:String
+    userImageUrl: string
+    userAge:string,
+    userCountry:string
 } 
 
-const getUserName = async(userId:string) =>{
-    const res:any = await UserApi.getUser(userId);
-    return res.firstName + " " + res.lastName;
+const getUserById = async(userId:string) =>{
+    const resGet:any = await UserApi.getUser(userId);
+    return resGet;
 }
 
-export default {getUserName}
+const updateUserData = async(userId:string,age?:string,country?:string) =>{
+    const resUpdate = await UserApi.updateUser(userId,age,country)
+}
+
+
+
+export default {getUserById,updateUserData}

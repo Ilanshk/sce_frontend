@@ -49,7 +49,7 @@ const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
     const handleLoginWithEmailAndPassword = async (userDetails:{email:string,password:string}) =>{
         const res =  await LoginApi.loginWithEmailAndPassword(userDetails.email,userDetails.password);
         if(res.ok){
-            navigation.navigate('StudentList',{accessToken:res.data.accessToken,user:res.data.userName})
+            navigation.navigate('StudentList',{accessToken:res.data.accessToken,userName:res.data.userName,userId:res.data.userId})
             console.log('Navigating to home page...');
             
         }
