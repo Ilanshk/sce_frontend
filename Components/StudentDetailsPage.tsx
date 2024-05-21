@@ -5,7 +5,7 @@ import userModel,{User} from "../Model/userModel";
 import { Entypo } from '@expo/vector-icons';
 
 
-const StudentDetailsPage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
+const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
   const [user,setUser] = useState<User>();
   const [isEditAge,setIsEditAge] = useState(false);
   const [isEditCountry,setIsEditCountry] = useState(false);
@@ -61,7 +61,7 @@ const StudentDetailsPage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
         // title: user?.firstName + user?.lastName,
         headerRight:()=>(
           <Button
-            onPress = {() => navigation.navigate('StudentAddPage')}
+            onPress = {() => navigation.navigate('PostAddPage')}
             title = "Edit"
           />
         )
@@ -203,4 +203,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default StudentDetailsPage;
+export default ProfilePage;

@@ -14,7 +14,7 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
   const[currentUser,setCurrentUser] = useState("");
   const onItemSelected = (id:string) =>{
     console.log("Item selected: "+id);
-    navigation.navigate('StudentDetailsPage',{id:id});
+    
   }
   useEffect(()=>{
     const unsubscribe = navigation.addListener('focus',async()=>{
@@ -40,7 +40,7 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
     navigation.setOptions({
       headerRight: () =>(
         <MaterialCommunityIcons name="account-details" size={44} color="black"
-        onPress={() => navigation.navigate('StudentDetailsPage',{id:route.params.userId})} />
+        onPress={() => navigation.navigate('ProfilePage',{id:route.params.userId})} />
       )
     })
   },[])
@@ -61,7 +61,7 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
         <Ionicons name="add-circle" 
             size={34} 
             color="black"
-            onPress={()=>navigation.navigate('StudentAddPage',{owner:currentUser})}
+            onPress={()=>navigation.navigate('PostAddPage',{owner:currentUser})}
         />
       </View>
     <FlatList

@@ -43,7 +43,7 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
         }
        
         if(resUserRegister.data.userTokens.accessToken){
-            navigation.navigate('StudentList',{accessToken:resUserRegister.data.userTokens.accessToken,userName:firstName+lastName})
+            navigation.navigate('HomePage',{accessToken:resUserRegister.data.userTokens.accessToken,userName:firstName+lastName})
         }
     }
     return (

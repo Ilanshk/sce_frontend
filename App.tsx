@@ -4,7 +4,7 @@ import HomePage from './Components/HomePage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import PostAddPage from './Components/PostAddPage';
-import StudentDetailsPage from './Components/StudentDetailsPage';
+import ProfilePage from './Components/StudentDetailsPage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LoginPage from './Components/LoginPage';
 import RegisterPage from './Components/RegisterPage';
@@ -20,9 +20,9 @@ const StudentsListScreen :FC = () =>{
     <StudentsListStack.Navigator>
       <StudentsListStack.Screen name="Log In Page" component={LoginPage} options={{title:'Welcome to Travmies'}}/>
       <StudentsListStack.Screen name="RegisterPage" component={RegisterPage} options={{title:'Register to Travmies'}}/>
-      <StudentsListStack.Screen name="StudentList" component={HomePage} options={{title:'Home'}}/>
-      <StudentsListStack.Screen name="StudentDetailsPage" component={StudentDetailsPage} options={{title:'Student Details'}}/>
-      <StudentsListStack.Screen name="StudentAddPage" component={PostAddPage} options={{title:'Add New Student'}}/>
+      <StudentsListStack.Screen name="HomePage" component={HomePage} options={{title:'Home'}}/>
+      <StudentsListStack.Screen name="ProfilePage" component={ProfilePage} options={{title:'Your Profile'}}/>
+      <StudentsListStack.Screen name="PostAddPage" component={PostAddPage} options={{title:'Add New Post'}}/>
 
     </StudentsListStack.Navigator>
   )

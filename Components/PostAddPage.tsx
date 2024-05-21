@@ -16,7 +16,7 @@ const PostAddPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
 
   
     const handleOnCancel = () =>{
-      navigation.navigate('StudentList');
+      navigation.navigate('HomePage');
     }
 
 
@@ -54,7 +54,7 @@ const PostAddPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
          };
          console.log("Add new Post to the model");
          PostModel.addPost(post);
-         navigation.navigate('StudentList',{user:route.params.owner}); 
+         navigation.navigate('HomePage',{user:route.params.owner}); 
       }
       catch(error){
          console.log("Error saving new student: "+error)
