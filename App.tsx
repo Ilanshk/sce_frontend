@@ -8,6 +8,7 @@ import ProfilePage from './Components/StudentDetailsPage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LoginPage from './Components/LoginPage';
 import RegisterPage from './Components/RegisterPage';
+import UserPostsPage from './Components/UserPostsPage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
@@ -23,6 +24,7 @@ const StudentsListScreen :FC = () =>{
       <StudentsListStack.Screen name="HomePage" component={HomePage} options={{title:'Home'}}/>
       <StudentsListStack.Screen name="ProfilePage" component={ProfilePage} options={{title:'Your Profile'}}/>
       <StudentsListStack.Screen name="PostAddPage" component={PostAddPage} options={{title:'Add New Post'}}/>
+      <StudentsListStack.Screen name="UserPostsPage" component = {UserPostsPage} options={{title:'My Posts'}}/>
 
     </StudentsListStack.Navigator>
   )

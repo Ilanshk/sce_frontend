@@ -61,8 +61,8 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
         // title: user?.firstName + user?.lastName,
         headerRight:()=>(
           <Button
-            onPress = {() => navigation.navigate('PostAddPage')}
-            title = "Edit"
+            onPress = {() => navigation.navigate('UserPostsPage',{userId:route.params.id,userName:route.params.userName,accessToken:route.params.accessToken})}
+            title = "My Posts"
           />
         )
       })

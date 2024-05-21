@@ -17,12 +17,22 @@ const getAllPosts = async(accessToken:string) =>{
     
 }
 
-const getStudentById = (id:string) =>{
-    return ApiClient.get("/student/"+id);
-}
+// const getPostByOwnerId = async(ownerId:string) =>{
+//     console.log("Owner ID: "+ownerId);
+//     let filteredPosts;
+//     try{
+//         const allPosts =  await ApiClient.get("/post");
+
+//     }catch(error)
+    
+// }
 
 const addPost = async(postJson:Post) =>{
     return await ApiClient.post("/post",postJson);
+}
+
+const updatePost = async(content:string,postId:string) =>{
+    return await ApiClient.put("/post/"+postId,{postContent:content});
 }
 
 const uploadImage = async (image:any) =>{
@@ -39,4 +49,4 @@ const deletePost = async (postId:string) =>{
     return deleteResponse;
 }
 
-export default{getAllPosts,getStudentById,addPost,uploadImage,deletePost};
+export default{getAllPosts,addPost,uploadImage,updatePost,deletePost};

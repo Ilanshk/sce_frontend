@@ -36,11 +36,12 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
     }
   },[route.params?.userName])
 
+
   useEffect(()=>{
     navigation.setOptions({
       headerRight: () =>(
         <MaterialCommunityIcons name="account-details" size={44} color="black"
-        onPress={() => navigation.navigate('ProfilePage',{id:route.params.userId})} />
+        onPress={() => navigation.navigate('ProfilePage',{id:route.params.userId,userName:route.params.userName,accessToken:route.params.accessToken})} />
       )
     })
   },[])
@@ -53,6 +54,17 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
       console.log("Error in getting user's full name: "+error)
     }
   }
+
+
+  const getUserProfileImgUrl = async(userId: string) =>{
+    try{
+      const user = await userModel.getUserById(userId);
+      return user.userImageUrl;
+    }catch(error){
+      console.log("Error retrieving user by id: "+error);
+    }
+  }
+
 
   return (
     <View style={styles.postPage}>
@@ -74,8 +86,11 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
           idPost={item._id}
           imgUrl={item.postImageUrl}
           content = {item.postText}
-          onItemSelected={onItemSelected}
+          // onItemSelected={onItemSelected}
           getFullName={getOwnerName}
+          getUserImgUrl = {getUserProfileImgUrl}
+          isHomePage={true}
+          isUserPostsPage = {false}
         />    
       )}
     ></FlatList>
