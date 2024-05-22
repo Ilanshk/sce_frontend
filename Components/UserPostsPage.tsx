@@ -1,5 +1,5 @@
 import { FC, useState,useEffect } from "react";
-import { View,Text, FlatList,StyleSheet,StatusBar } from "react-native";
+import { View,Text, FlatList,StyleSheet,StatusBar,Pressable,Modal,Button } from "react-native";
 import PostModel, { Post } from "../Model/PostModel";
 import PostListRow from "./PostListRow";
 import userModel from "../Model/userModel";
@@ -8,12 +8,12 @@ import userModel from "../Model/userModel";
 
 const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
     const [userPosts,setUserPosts] = useState<Post[]>([]);
+    const [isModalVisible,setIsModalVisible] = useState(false);
 
     useEffect(()=>{
         const fetchPostsOfUser = async() =>{
             try{
-                const posts:any = await PostModel.getAllPosts(route.params.accessToken);
-                console.log("Posts:",posts);
+                const posts:Post[] = await PostModel.getAllPosts(route.params.accessToken);
                 const filterdPosts:Post[] = posts.filter((post: Post) => post.owner == route.params.userId)
                 setUserPosts(filterdPosts);
             }catch(error){
@@ -21,8 +21,6 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
             }
         }
         fetchPostsOfUser();
-        console.log(userPosts);
-        
     },[route.params.userId])
 
     const getFullName = async(id:string) =>{
@@ -46,6 +44,21 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
         <View style={styles.userPosts}>
             <Text style={styles.helloMessage}>Hi,{route.params.userName}</Text>
             <Text>Here you can see all your posts</Text>
+            <Modal
+            animationType='slide'
+            visible={isModalVisible}
+            onRequestClose={() =>setIsModalVisible(!isModalVisible)}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text>Your Changes were saved</Text>
+                <Pressable
+                  onPress={() => setIsModalVisible(!isModalVisible)}>
+                    <Button title="OK"/>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
             {userPosts.length!=0? <FlatList
                 data={userPosts}
                 keyExtractor={(post)=> post._id}
@@ -55,11 +68,13 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
                     idPost={item._id}
                     imgUrl={item.postImageUrl}
                     content = {item.postText}
-                    // onItemSelected={route.params.onItemSelected}
                     getFullName={getFullName}
                     getUserImgUrl={getUserProfileImgUrl}
-                    isHomePage={false}
-                    isUserPostsPage={true}
+                    setUserPosts ={setUserPosts}
+                    isHomePage = {false}
+                    isUserPostsPage = {true}
+                    accessToken={route.params.accessToken}
+                    
                     ></PostListRow>
                 }
                 />
@@ -77,7 +92,25 @@ const styles = StyleSheet.create({
     },
     helloMessage:{
         fontSize:25
-    }
+    },
+    centeredView:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+      },
+      modalView:{
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+      }
 
 })
 

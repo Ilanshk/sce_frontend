@@ -33,11 +33,6 @@ const getAllPosts = async(accessToken:string) =>{
   }
 }
 
-// const getPostByOwnerId = async(id:string) =>{ //Get post by Owner ID
-//     console.log("Get Post By Id");
-//     const postResponse = await PostApi.getAllPosts();
-//     return postResponse.data;
-// }
 
 const addPost = async(post:Post) =>{
     console.log('addStudent');
@@ -54,8 +49,9 @@ const addPost = async(post:Post) =>{
     }
 }
 
-const updatePost = async(idPost:string,content:string) =>{
-  const updateRes = await PostApi.updatePost(idPost,content)
+const updatePost = async(idPost:string,content:string|undefined) =>{
+  const resUpdatePost = await PostApi.updatePost(idPost,content);
+  return resUpdatePost;
 
 }
 

@@ -31,7 +31,7 @@ const addPost = async(postJson:Post) =>{
     return await ApiClient.post("/post",postJson);
 }
 
-const updatePost = async(content:string,postId:string) =>{
+const updatePost = async(postId:string,content:string|undefined) =>{
     return await ApiClient.put("/post/"+postId,{postContent:content});
 }
 
@@ -45,7 +45,7 @@ const uploadImage = async (image:any) =>{
 }
 
 const deletePost = async (postId:string) =>{
-    const deleteResponse = await ApiClient.delete("/post",{id:postId});
+    const deleteResponse = await ApiClient.delete("/post/"+postId);
     return deleteResponse;
 }
 

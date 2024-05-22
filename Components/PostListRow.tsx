@@ -1,8 +1,9 @@
-import { StyleSheet,Button, Text, View, Image,Alert, TouchableOpacity, Pressable,Platform, TextInput,StatusBar, TouchableHighlight } from 'react-native';
+import { StyleSheet,Button, Text, View, Image,Alert, TouchableOpacity, Pressable,Platform, TextInput,StatusBar, TouchableHighlight,Modal } from 'react-native';
 import React,{FC, useEffect, useState,useRef} from 'react';
 import userModel from '../Model/userModel';
 import { Entypo } from '@expo/vector-icons';
-import PostModel from '../Model/PostModel';
+import PostModel,{Post} from '../Model/PostModel';
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 const PostListRow:FC<
@@ -13,16 +14,21 @@ const PostListRow:FC<
     // onItemSelected:(id:string)=>void,
     getFullName:(userId:string)=>Promise<string|undefined>,
     getUserImgUrl:(userId:string)=>Promise<string|undefined>,
+    setUserPosts:React.Dispatch<React.SetStateAction<Post[]>>
     isHomePage:boolean,
-    isUserPostsPage:boolean
+    isUserPostsPage:boolean,
+    accessToken:string
+
+    
     }
-    >=({idPostOwner,idPost,imgUrl,content,getFullName,getUserImgUrl,isHomePage,isUserPostsPage})=>{
+    >=({idPostOwner,idPost,imgUrl,content,getFullName,getUserImgUrl,setUserPosts,isHomePage,isUserPostsPage,accessToken})=>{
 
       const[owner,setOwner] = useState<string|undefined>("");
       const [userImgUrl ,setUserImgUrl] = useState<string|undefined>("");
       const postContentRef= useRef<TextInput>(null);
       const[isEdit,setIsEdit] = useState(false);
       const[postContent,setPostContent] = useState<string>();
+      
       const activateContentField = () =>{
         setIsEdit(true);
         if(postContentRef.current){
@@ -31,11 +37,29 @@ const PostListRow:FC<
       }
 
       const onSave= async() =>{
-        if(isEdit){
-          const saveResponse = await PostModel.updatePost(idPost,content);
-        }
+          const saveResponse = await PostModel.updatePost(idPost,postContent);
+          if(saveResponse.ok){
+            Alert.alert('Changes Saved');
+            setIsEdit(false);
+          }
       }
-    const onPress = () =>{
+
+      const onDelete = async() =>{
+          Alert.alert("Delete","Are you sure you want to delete this Post?",
+            [{text:"Yes",onPress:async()=> {
+              const deleteResponse = await PostModel.deletePost(idPost);
+              if(deleteResponse?.ok){
+                Alert.alert('Delete',"The post was deleted",[{text:"Close"}]);
+                const postsNow = await PostModel.getAllPosts(accessToken);
+                setUserPosts(postsNow);
+              }
+              else{
+                Alert.alert('Error',deleteResponse?.problem);
+              }}},
+             {text:"No, I changed my mind"}]
+          );
+        }
+      const onPress = () =>{
        //onItemSelected(idPost);
     };
 
@@ -66,23 +90,39 @@ const PostListRow:FC<
                 {userImgUrl &&<Image style={styles.avatar} source={{uri:userImgUrl}}/>}
                  <Text style={styles.name}>{owner}</Text>
                 </View>
-                 <Entypo style={styles.edit} name="edit" size={24} color="black" onPress={activateContentField}/>
+                {isUserPostsPage && <View>
+                  <Entypo style={styles.edit} name="edit" size={24} color="black" onPress={activateContentField}/>
+                  <MaterialIcons name="delete" size={24} color="black" onPress={onDelete}/>
+                </View>}
               </View>
+
               <View style={styles.middlePart}>
                 <TextInput 
                   style={styles.content}
                   editable={true}
                   ref={postContentRef}
                   onChangeText={setPostContent}
+                  
                   >
                   {content}</TextInput>
-                {isEdit && <Button title="Save Changes" onPress = {onSave}/>}
+                  {isEdit && <View style={styles.buttons}>
+                  <TouchableOpacity style={styles.saveBtn}>
+                    <Button title="Save Changes" onPress = {onSave}/>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.cancelBtn}>
+                    <Button title="Cancel" onPress={()=>setIsEdit(false)}></Button>
+                  </TouchableOpacity>
+                  </View>}
               </View>
+              
               <View>
                 {imgUrl &&<Image style={styles.postImage} source={{uri:imgUrl}}/>}
                 {!imgUrl &&<Image style={styles.postImage} source={require("../assets/avatar.png")}/>}
+                
               </View>
+              
             </View>
+            
         </TouchableHighlight>
     );
 }
@@ -135,7 +175,22 @@ const styles = StyleSheet.create({
   content:{
     fontStyle:'normal',
     fontSize:20,
+  
   },
+  buttons:{
+    flexDirection: 'row',
+    justifyContent:'space-evenly',
+    top:5
+  },
+  saveBtn:{
+    backgroundColor:'green'
+
+  },
+  cancelBtn:{
+    backgroundColor:'red'
+
+  },
+  
   
 });
 

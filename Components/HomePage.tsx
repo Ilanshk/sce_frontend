@@ -86,11 +86,12 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
           idPost={item._id}
           imgUrl={item.postImageUrl}
           content = {item.postText}
-          // onItemSelected={onItemSelected}
           getFullName={getOwnerName}
           getUserImgUrl = {getUserProfileImgUrl}
-          isHomePage={true}
+          setUserPosts = {setData}
+          isHomePage = {true}
           isUserPostsPage = {false}
+          accessToken={route.params.accessToken}
         />    
       )}
     ></FlatList>
