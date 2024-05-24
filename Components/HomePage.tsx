@@ -1,17 +1,17 @@
 import React,{FC, useEffect, useState} from 'react';
-import{Text,FlatList, StyleSheet, Button,View }from 'react-native';
+import{Text,FlatList, StyleSheet,View }from 'react-native';
 import PostListRow from './PostListRow';
 import PostModel,{Post} from '../Model/PostModel';
 import userModel from '../Model/userModel';
 import { Ionicons } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import HeaderOprtions from '../Components/Menu'
 
 
 
 const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
   const [data,setData] = useState<Post[]>([]);
   const[currentUser,setCurrentUser] = useState("");
+  
   const onItemSelected = (id:string) =>{
     console.log("Item selected: "+id);
     
@@ -27,6 +27,7 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
         setData(Array<Post>())
       }
     })
+    
     return unsubscribe;
   },[navigation])
 
@@ -37,14 +38,20 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
   },[route.params?.userName])
 
 
-  useEffect(()=>{
+ useEffect(()=>{
+   
     navigation.setOptions({
       headerRight: () =>(
-        <MaterialCommunityIcons name="account-details" size={44} color="black"
-        onPress={() => navigation.navigate('ProfilePage',{id:route.params.userId,userName:route.params.userName,accessToken:route.params.accessToken})} />
-      )
-    })
-  },[])
+          <HeaderOprtions
+            navigateToProfile= {()=> navigation.navigate('ProfilePage',{id:route.params.userId,userName:route.params.userName,accessToken:route.params.accessToken})}
+            logOutOfApp={()=> navigation.navigate('LogInPage')}
+            navigateToHome={()=>{}}
+          />
+      ),
+      
+      })
+    },[])
+        
 
   const getOwnerName = async(userId:string) =>{
     try{
@@ -73,8 +80,9 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
         <Ionicons name="add-circle" 
             size={34} 
             color="black"
-            onPress={()=>navigation.navigate('PostAddPage',{owner:currentUser})}
+            onPress={()=>navigation.navigate('PostAddPage',{owner:currentUser,accessToken:route.params.accessToken})}
         />
+        
       </View>
     <FlatList
       style={styles.flatList}
@@ -96,6 +104,7 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
       )}
     ></FlatList>
   </View>
+  
   )
 }
 
@@ -108,7 +117,8 @@ const styles = StyleSheet.create({
     fontSize:20,
   },
   addPost:{
-    marginStart:370,
+    flexDirection:'row',
+    //marginStart:370,
     margin:10
   },
     flatList:{

@@ -3,6 +3,7 @@ import {View,StyleSheet,Text,TextInput,Button, ImageBackground} from 'react-nati
 import { FC,useEffect, useState } from "react";
 import {GoogleSignin,GoogleSigninButton} from "@react-native-google-signin/google-signin";
 import { Feather } from '@expo/vector-icons';
+import userModel from "../Model/userModel";
 
 const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
     const [username,setUsername] = useState<string>("");
@@ -23,7 +24,10 @@ const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
 
     useEffect(() => {
         configureGoogleSignIn();
-        GoogleSignin.signOut();   
+        GoogleSignin.signOut();
+        navigation.setOptions({
+            headerRight:()=> <Text></Text>
+        })  
     }, []);
 
     const handleGoogleSignIn = async () =>{
@@ -31,11 +35,11 @@ const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
             console.log("Button clicked");
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            //console.log("Login Page-User info"+userInfo.idToken);
+            console.log("Login Page-User info"+userInfo.user.id);
             const tokenToServer = userInfo.idToken;
             const serverResponse = await LoginApi.loginWithGoogle(tokenToServer)
             if(serverResponse.data.userTokens){
-                navigation.navigate('HomePage')
+                navigation.navigate('HomePage',{userName:userInfo.user.name,accessToken:serverResponse.data.userTokens.accessToken})
             }
 
             

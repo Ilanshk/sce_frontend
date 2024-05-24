@@ -12,11 +12,14 @@ const PostAddPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
     
     useEffect(()=>{
       AddPictureApi.askCameraPermission();
+      navigation.setOptions({
+        headerRight:()=><Text></Text>
+      })
     },[])
 
   
     const handleOnCancel = () =>{
-      navigation.navigate('HomePage');
+      navigation.navigate('HomePage',{accessToken:route.params.accessToken});
     }
 
 

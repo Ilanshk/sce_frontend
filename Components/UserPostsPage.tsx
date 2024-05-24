@@ -3,6 +3,7 @@ import { View,Text, FlatList,StyleSheet,StatusBar,Pressable,Modal,Button } from 
 import PostModel, { Post } from "../Model/PostModel";
 import PostListRow from "./PostListRow";
 import userModel from "../Model/userModel";
+import HeaderOptions from "./Menu";
 
 
 
@@ -21,6 +22,14 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
             }
         }
         fetchPostsOfUser();
+        navigation.setOptions({
+            headerRight:()=>
+                <HeaderOptions
+                navigateToProfile={()=>navigation.navigate('ProfilePage',{id:route.params.userId})}
+                logOutOfApp={()=>navigation.navigate('LogInPage')}
+                navigateToHome={()=>navigation.navigate('HomePage',{accessToken:route.params.accessToken})}
+                />
+        })
     },[route.params.userId])
 
     const getFullName = async(id:string) =>{

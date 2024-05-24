@@ -3,6 +3,7 @@ import { useState,FC, useEffect,useRef } from "react";
 import PostModel, { Post } from "../Model/PostModel";
 import userModel,{User} from "../Model/userModel";
 import { Entypo } from '@expo/vector-icons';
+import HeaderOptions from "./Menu";
 
 
 const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
@@ -58,11 +59,12 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
   useEffect(()=>{
     if(user){
       navigation.setOptions({
-        // title: user?.firstName + user?.lastName,
+        title: user?.firstName + user?.lastName,
         headerRight:()=>(
-          <Button
-            onPress = {() => navigation.navigate('UserPostsPage',{userId:route.params.id,userName:route.params.userName,accessToken:route.params.accessToken})}
-            title = "My Posts"
+          <HeaderOptions 
+            navigateToProfile={()=>{}}
+            logOutOfApp={()=>navigation.navigate('LogInPage')}
+            navigateToHome={()=>navigation.navigate('HomePage',{accessToken:route.params.accessToken})}
           />
         )
       })
@@ -129,7 +131,11 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
           </TouchableOpacity>
         </View>
         }
-        
+
+        <Button
+            onPress = {() => navigation.navigate('UserPostsPage',{userId:route.params.id,userName:route.params.userName,accessToken:route.params.accessToken})}
+            title = "My Posts"
+          />
       </ScrollView>
       </View>
     )

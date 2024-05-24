@@ -15,7 +15,13 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
     const[firstName,setFirstName] = useState<string>("");
     const [lastName,setLastName] = useState<string>("");
 
-    useEffect(()=>{AddPictureApi.askCameraPermission()},[]);
+    useEffect(()=>{
+        AddPictureApi.askCameraPermission();
+        navigation.setOptions({
+            headerRight:()=><Text></Text>
+        })
+    }
+        ,[]);
 
     const handleErrorInRegistration = () =>{
         setFirstName("");
