@@ -4,7 +4,8 @@ import PostListRow from './PostListRow';
 import PostModel,{Post} from '../Model/PostModel';
 import userModel from '../Model/userModel';
 import { Ionicons } from '@expo/vector-icons';
-import HeaderOprtions from '../Components/Menu'
+import HeaderOprtions from '../Components/Menu';
+import UserApi from '../Api/UserApi';
 
 
 
@@ -43,8 +44,13 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
     navigation.setOptions({
       headerRight: () =>(
           <HeaderOprtions
-            navigateToProfile= {()=> navigation.navigate('ProfilePage',{id:route.params.userId,userName:route.params.userName,accessToken:route.params.accessToken})}
-            logOutOfApp={()=> navigation.navigate('LogInPage')}
+            navigateToProfile= {()=> navigation.navigate('ProfilePage',{id:route.params.userId,userName:route.params.userName,accessToken:route.params.accessToken,refreshToken:route.params.refreshToken})}
+            logOutOfApp={()=>{
+              UserApi.logOutUser(route.params.refreshToken);
+              navigation.navigate('LogInPage');
+
+            }
+            } 
             navigateToHome={()=>{}}
           />
       ),
@@ -80,7 +86,7 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
         <Ionicons name="add-circle" 
             size={34} 
             color="black"
-            onPress={()=>navigation.navigate('PostAddPage',{owner:currentUser,accessToken:route.params.accessToken})}
+            onPress={()=>navigation.navigate('PostAddPage',{owner:currentUser,accessToken:route.params.accessToken,refreshToken:route.params.refreshToken})}
         />
         
       </View>

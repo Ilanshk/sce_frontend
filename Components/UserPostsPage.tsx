@@ -4,6 +4,7 @@ import PostModel, { Post } from "../Model/PostModel";
 import PostListRow from "./PostListRow";
 import userModel from "../Model/userModel";
 import HeaderOptions from "./Menu";
+import UserApi from "../Api/UserApi";
 
 
 
@@ -25,9 +26,12 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
         navigation.setOptions({
             headerRight:()=>
                 <HeaderOptions
-                navigateToProfile={()=>navigation.navigate('ProfilePage',{id:route.params.userId})}
-                logOutOfApp={()=>navigation.navigate('LogInPage')}
-                navigateToHome={()=>navigation.navigate('HomePage',{accessToken:route.params.accessToken})}
+                navigateToProfile={()=>navigation.navigate('ProfilePage',{id:route.params.userId,refreshToken:route.params.refreshToken})}
+                logOutOfApp={()=>{
+                    UserApi.logOutUser(route.params.refreshToken);
+                    navigation.navigate('LogInPage');
+                }}
+                navigateToHome={()=>navigation.navigate('HomePage',{accessToken:route.params.accessToken,refreshToken:route.params.refreshToken})}
                 />
         })
     },[route.params.userId])

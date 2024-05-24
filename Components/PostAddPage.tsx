@@ -19,7 +19,7 @@ const PostAddPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
 
   
     const handleOnCancel = () =>{
-      navigation.navigate('HomePage',{accessToken:route.params.accessToken});
+      navigation.navigate('HomePage',{accessToken:route.params.accessToken,refreshToken:route.params.refreshToken});
     }
 
 
@@ -57,7 +57,7 @@ const PostAddPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
          };
          console.log("Add new Post to the model");
          PostModel.addPost(post);
-         navigation.navigate('HomePage',{user:route.params.owner}); 
+         navigation.navigate('HomePage',{user:route.params.owner,refreshToken:route.params.refreshToken}); 
       }
       catch(error){
          console.log("Error saving new student: "+error)

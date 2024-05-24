@@ -39,7 +39,7 @@ const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
             const tokenToServer = userInfo.idToken;
             const serverResponse = await LoginApi.loginWithGoogle(tokenToServer)
             if(serverResponse.data.userTokens){
-                navigation.navigate('HomePage',{userName:userInfo.user.name,accessToken:serverResponse.data.userTokens.accessToken})
+                navigation.navigate('HomePage',{userName:userInfo.user.name,accessToken:serverResponse.data.userTokens.accessToken,refreshToken:serverResponse.data.userTokens.refreshToken})
             }
 
             
@@ -53,7 +53,7 @@ const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
     const handleLoginWithEmailAndPassword = async (userDetails:{email:string,password:string}) =>{
         const res =  await LoginApi.loginWithEmailAndPassword(userDetails.email,userDetails.password);
         if(res.ok){
-            navigation.navigate('HomePage',{accessToken:res.data.accessToken,userName:res.data.userName,userId:res.data.userId})
+            navigation.navigate('HomePage',{accessToken:res.data.accessToken,userName:res.data.userName,userId:res.data.userId,refreshToken:res.data.refreshToken})
             console.log('Navigating to home page...');
             
         }

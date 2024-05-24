@@ -1,9 +1,9 @@
 import { View,Image,StyleSheet, StatusBar,Text, Button, TextInput, ScrollView, TouchableOpacity } from "react-native";
 import { useState,FC, useEffect,useRef } from "react";
-import PostModel, { Post } from "../Model/PostModel";
 import userModel,{User} from "../Model/userModel";
 import { Entypo } from '@expo/vector-icons';
 import HeaderOptions from "./Menu";
+import UserApi from "../Api/UserApi";
 
 
 const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
@@ -63,8 +63,12 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
         headerRight:()=>(
           <HeaderOptions 
             navigateToProfile={()=>{}}
-            logOutOfApp={()=>navigation.navigate('LogInPage')}
-            navigateToHome={()=>navigation.navigate('HomePage',{accessToken:route.params.accessToken})}
+            logOutOfApp={()=>{
+              navigation.navigate('LogInPage');
+              UserApi.logOutUser(route.params.refreshToken);
+            
+            }}
+            navigateToHome={()=>navigation.navigate('HomePage',{accessToken:route.params.accessToken,refreshToken:route.params.refreshToken})}
           />
         )
       })
@@ -133,7 +137,7 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
         }
 
         <Button
-            onPress = {() => navigation.navigate('UserPostsPage',{userId:route.params.id,userName:route.params.userName,accessToken:route.params.accessToken})}
+            onPress = {() => navigation.navigate('UserPostsPage',{userId:route.params.id,userName:route.params.userName,accessToken:route.params.accessToken,refreshToken:route.params.refreshToken})}
             title = "My Posts"
           />
       </ScrollView>
