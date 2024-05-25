@@ -15,7 +15,7 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
     useEffect(()=>{
         const fetchPostsOfUser = async() =>{
             try{
-                const posts:Post[] = await PostModel.getAllPosts(route.params.accessToken);
+                const posts:Post[] = await PostModel.getAllPosts(route.params.refreshToken);
                 const filterdPosts:Post[] = posts.filter((post: Post) => post.owner == route.params.userId)
                 setUserPosts(filterdPosts);
             }catch(error){
@@ -31,10 +31,10 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
                     UserApi.logOutUser(route.params.refreshToken);
                     navigation.navigate('LogInPage');
                 }}
-                navigateToHome={()=>navigation.navigate('HomePage',{accessToken:route.params.accessToken,refreshToken:route.params.refreshToken})}
+                navigateToHome={()=>navigation.navigate('HomePage',{userId:route.params.userId,accessToken:route.params.accessToken,refreshToken:route.params.refreshToken})}
                 />
         })
-    },[route.params.userId])
+    },[navigation]) //route.params.userId
 
     const getFullName = async(id:string) =>{
         try{
@@ -57,7 +57,7 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
         <View style={styles.userPosts}>
             <Text style={styles.helloMessage}>Hi,{route.params.userName}</Text>
             <Text>Here you can see all your posts</Text>
-            <Modal
+            {/* <Modal
             animationType='slide'
             visible={isModalVisible}
             onRequestClose={() =>setIsModalVisible(!isModalVisible)}
@@ -71,7 +71,7 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
                 </Pressable>
               </View>
             </View>
-          </Modal>
+          </Modal> */}
             {userPosts.length!=0? <FlatList
                 data={userPosts}
                 keyExtractor={(post)=> post._id}
@@ -86,7 +86,7 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
                     setUserPosts ={setUserPosts}
                     isHomePage = {false}
                     isUserPostsPage = {true}
-                    accessToken={route.params.accessToken}
+                    accessToken={route.params.refreshToken}
                     
                     ></PostListRow>
                 }

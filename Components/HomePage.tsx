@@ -21,7 +21,7 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
     const unsubscribe = navigation.addListener('focus',async()=>{
       console.log("screen in focus");
       try{
-        const posts = await PostModel.getAllPosts(route.params.accessToken);
+        const posts = await PostModel.getAllPosts(route.params.refreshToken);
         setData(posts)
       }catch(err){
         console.log("Failed to read Students from Server: "+err);
@@ -105,7 +105,7 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
           setUserPosts = {setData}
           isHomePage = {true}
           isUserPostsPage = {false}
-          accessToken={route.params.accessToken}
+          accessToken={route.params.refreshToken}
         />    
       )}
     ></FlatList>

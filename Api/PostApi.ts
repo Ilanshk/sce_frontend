@@ -31,8 +31,8 @@ const addPost = async(postJson:Post) =>{
     return await ApiClient.post("/post",postJson);
 }
 
-const updatePost = async(postId:string,content:string|undefined) =>{
-    return await ApiClient.put("/post/"+postId,{postContent:content});
+const updatePost = async(postId:string,content:string|undefined,image:string|undefined) =>{
+    return await ApiClient.put("/post/"+postId,{postContent:content,postImageUrl:image});
 }
 
 const uploadImage = async (image:any) =>{

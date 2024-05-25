@@ -49,8 +49,8 @@ const addPost = async(post:Post) =>{
     }
 }
 
-const updatePost = async(idPost:string,content:string|undefined) =>{
-  const resUpdatePost = await PostApi.updatePost(idPost,content);
+const updatePost = async(idPost:string,content:string|undefined,image:string|undefined) =>{
+  const resUpdatePost = await PostApi.updatePost(idPost,content,image);
   return resUpdatePost;
 
 }
