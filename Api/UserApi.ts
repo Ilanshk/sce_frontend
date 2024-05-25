@@ -6,8 +6,8 @@ const getUser = async(id:string) =>{
     return getResponse.data;
 }
 
-const updateUser = async(id:string,age?:string,country?:string) =>{
-    const updateResponse = await ApiClient.put("/user/"+id,{userAge:age,userCountry:country});
+const updateUser = async(id:string,age?:string,country?:string,profileImage?:string) =>{
+    const updateResponse = await ApiClient.put("/user/"+id,{userAge:age,userCountry:country,userImageUrl:profileImage});
 }
 
 const logOutUser = async(refreshToken:string)=>{

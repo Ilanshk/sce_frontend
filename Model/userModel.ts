@@ -17,8 +17,8 @@ const getUserById = async(userId:string) =>{
     return resGet;
 }
 
-const updateUserData = async(userId:string,age?:string,country?:string) =>{
-    const resUpdate = await UserApi.updateUser(userId,age,country)
+const updateUserData = async(userId:string,age?:string,country?:string,profileImage?:string) =>{
+    const resUpdate = await UserApi.updateUser(userId,age,country,profileImage);
 }
 
 

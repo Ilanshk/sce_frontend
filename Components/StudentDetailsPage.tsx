@@ -1,9 +1,14 @@
-import { View,Image,StyleSheet, StatusBar,Text, Button, TextInput, ScrollView, TouchableOpacity } from "react-native";
+import { View,Image,StyleSheet, StatusBar,Text, Button, TextInput, ScrollView, TouchableOpacity,Alert } from "react-native";
 import { useState,FC, useEffect,useRef } from "react";
 import userModel,{User} from "../Model/userModel";
+import PostModel from "../Model/PostModel";
 import { Entypo } from '@expo/vector-icons';
+import { Fontisto } from '@expo/vector-icons';
+import { FontAwesome6 } from '@expo/vector-icons';
 import HeaderOptions from "./Menu";
 import UserApi from "../Api/UserApi";
+import AddPictureApi from "../Api/AddPictureApi";
+import PostApi from "../Api/PostApi";
 
 
 const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
@@ -12,6 +17,7 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
   const [isEditCountry,setIsEditCountry] = useState(false);
   const[age,setAge] = useState<string>();
   const [country,setCountry] = useState<string>('');
+  const [userProfileImage,setUserProfileImage] = useState<string>("")
   
   const countryInputRef = useRef<TextInput>(null);
   const ageInputRef = useRef<TextInput>(null);
@@ -77,8 +83,37 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
   return(
     <View style={styles.container}>
       <ScrollView style = {styles.scrollView}>
-        {user?.userImageUrl? <Image style={styles.avatar}source={{uri:user?.userImageUrl}}/>
-        :<Image style={styles.avatar} source={require("../assets/avatar.png")}/>}
+        <View>
+          {user?.userImageUrl? <Image style={styles.avatar}source={{uri:user?.userImageUrl}}/>
+          :<Image style={styles.avatar} source={require("../assets/avatar.png")}/>}
+          <TouchableOpacity
+              onPress={async()=>{
+                const uri = await AddPictureApi.activateCamera();
+                if(uri){
+                  const urlImg = await PostModel.uploadImage(uri);
+                  setUserProfileImage(urlImg);
+                  await userModel.updateUserData(route.params.id,undefined,undefined,urlImg);
+                  Alert.alert("Profile Image Update","You Image was updated")
+                }
+              }}
+          >
+            <Fontisto name="camera" size={24} color="black" style={styles.cameraButton} />
+          </TouchableOpacity>
+          <TouchableOpacity
+              onPress={async()=>{
+                const uri = await AddPictureApi.openGallery();
+                if(uri){
+                  const urlImg = await PostModel.uploadImage(uri);
+                  setUserProfileImage(urlImg);
+                  userModel.updateUserData(route.params.id,undefined,undefined,urlImg);
+                }
+              }
+                }
+          >
+            <FontAwesome6 name="image" size={24} color="black" style={styles.galleryButton} />
+          </TouchableOpacity>
+
+        </View>
       
         <View style={styles.userName}>
           <Text style={styles.name}>{user?.firstName + " "}</Text>
@@ -210,6 +245,20 @@ const styles = StyleSheet.create({
     },
     buttonText:{
         padding:10
+    },
+    cameraButton:{
+      position:'absolute',
+      bottom:-15,
+      left:15,
+      width:50,
+      height:50
+    },
+    galleryButton:{
+      position:'absolute',
+      bottom:-15,
+      right:15,
+      width:50,
+      height:50
     }
 });
 
