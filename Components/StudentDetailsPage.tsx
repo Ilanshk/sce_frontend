@@ -1,4 +1,4 @@
-import { View,Image,StyleSheet, StatusBar,Text, Button, TextInput, ScrollView, TouchableOpacity,Alert } from "react-native";
+import { View,Image,StyleSheet, StatusBar,Text, Button, TextInput, ScrollView, TouchableOpacity,Alert, ActivityIndicator } from "react-native";
 import { useState,FC, useEffect,useRef } from "react";
 import userModel,{User} from "../Model/userModel";
 import PostModel from "../Model/PostModel";
@@ -8,7 +8,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import HeaderOptions from "./Menu";
 import UserApi from "../Api/UserApi";
 import AddPictureApi from "../Api/AddPictureApi";
-import PostApi from "../Api/PostApi";
+
 
 
 const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
@@ -17,7 +17,8 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
   const [isEditCountry,setIsEditCountry] = useState(false);
   const[age,setAge] = useState<string>();
   const [country,setCountry] = useState<string>('');
-  const [userProfileImage,setUserProfileImage] = useState<string>("")
+  const [userProfileImage,setUserProfileImage] = useState<string>("");
+  const[dispalyActivityIndicator,setDisplayActivityIndicator] = useState(true);
   
   const countryInputRef = useRef<TextInput>(null);
   const ageInputRef = useRef<TextInput>(null);
@@ -47,6 +48,12 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
     if(isEditAge && isEditCountry){
       saveResponse = await userModel.updateUserData(route.params.id,age,country)
     }
+    setDisplayActivityIndicator(true);
+    setTimeout(()=>{
+      setDisplayActivityIndicator(false);
+      setIsEditAge(false);
+      setIsEditCountry(false);
+    },2000);
 
   }
   
@@ -78,10 +85,15 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
           />
         )
       })
+      //setDisplayActivityIndicator(false);
     }
   },[user])
+
+  setTimeout(()=>setDisplayActivityIndicator(false),3000);
+
   return(
     <View style={styles.container}>
+      {!dispalyActivityIndicator ?<View style={styles.container}>
       <ScrollView style = {styles.scrollView}>
         <View>
           {user?.userImageUrl? <Image style={styles.avatar}source={{uri:user?.userImageUrl}}/>
@@ -93,7 +105,11 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
                   const urlImg = await PostModel.uploadImage(uri);
                   setUserProfileImage(urlImg);
                   await userModel.updateUserData(route.params.id,undefined,undefined,urlImg);
-                  Alert.alert("Profile Image Update","You Image was updated")
+                  setDisplayActivityIndicator(true);
+                  setTimeout(() => {
+                    setDisplayActivityIndicator(false);
+                    Alert.alert("Profile Image Update","You Image was updated");
+                  })
                 }
               }}
           >
@@ -163,19 +179,23 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
         {(isEditAge || isEditCountry) &&
         <View style={styles.buttons}>
           <TouchableOpacity style={styles.cancelBtn}>
-            <Text style={styles.cancelBtn}>Cancel</Text>
+            <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.saveBtn} onPress={onSave}>
-            <Text style={styles.saveBtn}>Save</Text>
+            <Text style={styles.buttonText}>Save</Text>
           </TouchableOpacity>
         </View>
         }
 
+      <TouchableOpacity style={styles.myPostsBtn}>
         <Button
             onPress = {() => navigation.navigate('UserPostsPage',{userId:route.params.id,userName:route.params.userName,accessToken:route.params.accessToken,refreshToken:route.params.refreshToken})}
             title = "My Posts"
           />
+      </TouchableOpacity>
       </ScrollView>
+      </View>
+      :<View style={styles.activityIndicator}><ActivityIndicator size={100}/></View>}
       </View>
     )
 
@@ -211,7 +231,6 @@ const styles = StyleSheet.create({
       fontSize:30
     },
     input:{
-        // padding:10,
         fontSize:30,
         borderWidth:1,
         width:250,
@@ -244,7 +263,9 @@ const styles = StyleSheet.create({
 
     },
     buttonText:{
-        padding:10
+        padding:10,
+        fontWeight:'bold',
+        fontSize:16
     },
     cameraButton:{
       position:'absolute',
@@ -259,6 +280,24 @@ const styles = StyleSheet.create({
       right:15,
       width:50,
       height:50
+    },
+    activityIndicator:{
+      flex:1,
+      alignItems:'center',
+      justifyContent:'center'
+    },
+    myPostsBtn:{
+      marginTop:10,
+      backgroundColor: '#007BFF',
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderRadius: 25,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      elevation: 5,
+      
     }
 });
 

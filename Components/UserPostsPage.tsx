@@ -1,5 +1,5 @@
 import { FC, useState,useEffect } from "react";
-import { View,Text, FlatList,StyleSheet,StatusBar,Pressable,Modal,Button } from "react-native";
+import { View,Text, FlatList,StyleSheet,StatusBar,Pressable,Modal,Button, ActivityIndicator } from "react-native";
 import PostModel, { Post } from "../Model/PostModel";
 import PostListRow from "./PostListRow";
 import userModel from "../Model/userModel";
@@ -11,6 +11,7 @@ import UserApi from "../Api/UserApi";
 const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
     const [userPosts,setUserPosts] = useState<Post[]>([]);
     const [isModalVisible,setIsModalVisible] = useState(false);
+    const [dispalyActivityIndicator,setDisplayActivityIndicator] = useState(true);
 
     useEffect(()=>{
         const fetchPostsOfUser = async() =>{
@@ -18,6 +19,7 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
                 const posts:Post[] = await PostModel.getAllPosts(route.params.refreshToken);
                 const filterdPosts:Post[] = posts.filter((post: Post) => post.owner == route.params.userId)
                 setUserPosts(filterdPosts);
+                //setDisplayActivityIndicator(false);
             }catch(error){
                 console.log("Error in getting user's posts: "+error);  
             }
@@ -34,6 +36,7 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
                 navigateToHome={()=>navigation.navigate('HomePage',{userId:route.params.userId,accessToken:route.params.accessToken,refreshToken:route.params.refreshToken})}
                 />
         })
+        //setDisplayActivityIndicator(false);
     },[navigation]) //route.params.userId
 
     const getFullName = async(id:string) =>{
@@ -52,9 +55,12 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
           console.log("Error retrieving user by id: "+error);
         }
       }
+
+      setTimeout(()=> setDisplayActivityIndicator(false),3000);
    
     return(
         <View style={styles.userPosts}>
+          {!dispalyActivityIndicator ? <View style={styles.userPosts}>
             <Text style={styles.helloMessage}>Hi,{route.params.userName}</Text>
             <Text>Here you can see all your posts</Text>
             {/* <Modal
@@ -93,14 +99,16 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
                 />
                 :<Text>You don't have posts yet</Text>
             }
+          </View> : <View style={styles.activityIndicator}><ActivityIndicator size={100}/></View>}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     userPosts:{
+        flex:1,
         marginTop:StatusBar.currentHeight,
-        marginHorizontal:5,
+        //marginHorizontal:5,
         alignItems:'center'
     },
     helloMessage:{
@@ -123,6 +131,11 @@ const styles = StyleSheet.create({
           width: 0,
           height: 2,
         },
+      },
+      activityIndicator:{
+        flex:1,
+        alignItems:'center',
+        justifyContent: 'center'
       }
 
 })

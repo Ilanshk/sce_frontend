@@ -6,6 +6,7 @@ import PostModel,{Post} from '../Model/PostModel';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { ActivityIndicator } from 'react-native-paper';
 
 
 const PostListRow:FC<
@@ -33,6 +34,8 @@ const PostListRow:FC<
       
       const[isEditContent,setIsEditContent] = useState(false);
       const [isImgEdit,setIsImgEdit] = useState(false);
+
+      const[dispalyActivityIndicator,setDisplayActivityIndicator] = useState(false);
       
       const postContentRef= useRef<TextInput>(null);
 
@@ -46,19 +49,27 @@ const PostListRow:FC<
       const onSave= async() =>{
           const saveResponse = await PostModel.updatePost(idPost,postContent,userImgUrl);
           if(saveResponse.ok){
-            Alert.alert('Changes Saved');
             setIsEditContent(false);
+            setDisplayActivityIndicator(true);
+            setTimeout(()=>{
+              setDisplayActivityIndicator(false);
+              Alert.alert('Changes Saved');
+            },2000);
           }
-      }
+        }
 
       const onDelete = async() =>{
           Alert.alert("Delete","Are you sure you want to delete this Post?",
             [{text:"Yes",onPress:async()=> {
               const deleteResponse = await PostModel.deletePost(idPost);
               if(deleteResponse?.ok){
-                Alert.alert('Delete',"The post was deleted",[{text:"Close"}]);
+                setDisplayActivityIndicator(true);
                 const postsNow = await PostModel.getAllPosts(accessToken);
                 setUserPosts(postsNow);
+                setTimeout(()=>{
+                  setDisplayActivityIndicator(false);
+                  Alert.alert('Delete',"The post was deleted",[{text:"Close"}]);
+                },2000)
               }
               else{
                 Alert.alert('Error',deleteResponse?.problem);
@@ -121,6 +132,7 @@ const PostListRow:FC<
                   
                   >
                   {content}</TextInput>
+                  {dispalyActivityIndicator && <ActivityIndicator size={100}/>}
                   {isEditContent && <View style={styles.buttons}>
                   <TouchableOpacity style={styles.saveBtn}>
                     <Button title="Save Changes" onPress = {onSave}/>

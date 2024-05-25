@@ -1,4 +1,4 @@
-import { TextInput,View,Image,StyleSheet, StatusBar, TouchableOpacity,Text, ScrollView } from "react-native";
+import { TextInput,View,Image,StyleSheet, StatusBar, TouchableOpacity,Text, ScrollView, ActivityIndicator } from "react-native";
 import { useState,FC, useEffect } from "react";
 import { Fontisto } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
@@ -8,6 +8,7 @@ import PostModel,{ Post } from "../Model/PostModel";
 const PostAddPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
     const [postContent,setPostContent] = useState("");
     const [imageUrl,setImageUrl] = useState<string>("");
+    const [dispalyActivityIndicator,setDisplayActivityIndicator] = useState(false);
 
     
     useEffect(()=>{
@@ -57,7 +58,10 @@ const PostAddPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
          };
          console.log("Add new Post to the model");
          PostModel.addPost(post);
-         navigation.navigate('HomePage',{user:route.params.owner,refreshToken:route.params.refreshToken}); 
+         setDisplayActivityIndicator(true);
+         setTimeout(()=>{
+           navigation.navigate('HomePage',{user:route.params.owner,refreshToken:route.params.refreshToken}); 
+         },3000);
       }
       catch(error){
          console.log("Error saving new student: "+error)
@@ -66,10 +70,10 @@ const PostAddPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
     }
     
     return(
-      <ScrollView>
-        <View style={styles.container}>
+      <ScrollView style={styles.scroll}>
+        {!dispalyActivityIndicator ? <View style={styles.container}>
           <View>
-            {imageUrl == "" &&<Image style={styles.avatar}source={require('../assets/avatar.png')}/>}
+            {imageUrl == "" &&<Image style={styles.avatar}source={require('../assets/imagePlaceHolder.jpg')}/>}
             {imageUrl != "" && <Image source={{uri:imageUrl}} style={styles.avatar}/>}
             <TouchableOpacity
               onPress={handleActivateCamera}
@@ -93,22 +97,25 @@ const PostAddPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
           />
          
           <View style={styles.buttons}>
-            <TouchableOpacity style={styles.button} 
+            <TouchableOpacity style={styles.cancelBtn} 
               onPress={handleOnCancel}>
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} 
+            <TouchableOpacity style={styles.saveBtn} 
               onPress={handleOnSave}>
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
           </View>
-      </View>
+      </View> : <View style={styles.activityIndicator}><ActivityIndicator size={100}/></View>}
     </ScrollView>
     )
 
 }
 
 const styles = StyleSheet.create({
+    scroll:{
+      flex:1
+    },
     container:{
         marginTop:StatusBar.currentHeight,
         flex:1,
@@ -138,10 +145,27 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-evenly'
     },
-    button:{
-        flex:1,
-        margin:10,
-        alignItems:'center'
+    cancelBtn:{
+      backgroundColor:'red',
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderRadius: 25,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      elevation: 5,
+    },
+    saveBtn:{
+      backgroundColor:'green',
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderRadius: 25,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      elevation: 5,
     },
     buttonText:{
         padding:10
@@ -159,6 +183,11 @@ const styles = StyleSheet.create({
       right:15,
       width:50,
       height:50
+    },
+    activityIndicator:{
+      flex:1,
+      alignItems:'center',
+      justifyContent:'center'
     }
 });
 

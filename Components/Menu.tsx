@@ -13,13 +13,13 @@ const HeaderOptions:FC<{navigateToProfile:()=>void,logOutOfApp:()=>void,navigate
     return (
         <View style={styles.headerOptions}>
             <TouchableOpacity onPress={navigateToHome} >
-                <Ionicons name="home" size={24} color="black"/>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={logOutOfApp}>
-            <Entypo name="log-out" size={24} color="black" />
+                <Ionicons name="home" size={30} color="black"/>
             </TouchableOpacity>
             <TouchableOpacity onPress={navigateToProfile}>
-            <MaterialIcons name="account-circle" size={24} color="black" />
+            <MaterialIcons name="account-circle" size={30} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={logOutOfApp}>
+            <Entypo name="log-out" size={30} color="black" />
             </TouchableOpacity>
         </View>
            
