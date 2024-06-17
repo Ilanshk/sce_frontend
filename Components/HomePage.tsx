@@ -84,11 +84,14 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
     <View style={styles.postPage}>
       {!dispalyActivityIndicator?
       <View style={styles.postPage}>
-        <Text style={styles.helloUser}>Hello,{currentUser}</Text>
+        <View style={styles.heading}>
+          <Text style={styles.helloUser}>Welcome,{currentUser}</Text>
+        </View>
         <View style={styles.addPost}>
+          <Text style={{fontSize:20}}>What do you want to share today?</Text>
           <Ionicons name="add-circle" 
               size={34} 
-              color="black"
+              color="blue"
               onPress={()=>navigation.navigate('PostAddPage',{owner:currentUser,accessToken:route.params.accessToken,refreshToken:route.params.refreshToken})}
           />
           
@@ -124,19 +127,25 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
 const styles = StyleSheet.create({
   postPage:{
     flex:1,
+  },
+  heading:{
+    alignItems:'center',
     
   },
   helloUser:{
-    fontSize:20,
+    fontSize:30,
+    fontWeight:'800'
+    
   },
   addPost:{
     flexDirection:'row',
-    //marginStart:370,
-    margin:10
+    alignItems:'center',
+    margin:10,
+    justifyContent:'space-between'
   },
   flatList:{
     //flex:1
-    backgroundColor:"#668be8"
+    
   },
   activityIndicator:{
     flex:1,

@@ -61,8 +61,8 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
     return(
         <View style={styles.userPosts}>
           {!dispalyActivityIndicator ? <View style={styles.userPosts}>
-            <Text style={styles.helloMessage}>Hi,{route.params.userName}</Text>
-            <Text>Here you can see all your posts</Text>
+            <Text style={styles.helloMessage}>Hello,{route.params.userName}</Text>
+            <Text style={styles.helloMessage}>Here you can see all your posts</Text>
             {/* <Modal
             animationType='slide'
             visible={isModalVisible}
@@ -107,12 +107,13 @@ const UserPostsPage:FC<{navigation:any,route:any}> = ({navigation,route}) =>{
 const styles = StyleSheet.create({
     userPosts:{
         flex:1,
-        marginTop:StatusBar.currentHeight,
+        marginTop:10,
         //marginHorizontal:5,
         alignItems:'center'
     },
     helloMessage:{
-        fontSize:25
+        fontSize:25,
+        marginBottom:10
     },
     centeredView:{
         flex: 1,

@@ -1,4 +1,4 @@
-import { StyleSheet,Button, Text, View, Image,Alert, TouchableOpacity, Pressable,Platform, TextInput,StatusBar, TouchableHighlight,Modal } from 'react-native';
+import { StyleSheet,Button, Text, View, Image,Alert, TouchableOpacity, Pressable,Platform, TextInput,StatusBar, TouchableHighlight,Modal,Dimensions } from 'react-native';
 import React,{FC, useEffect, useState,useRef} from 'react';
 import AddPictureApi from '../Api/AddPictureApi';
 import { Entypo } from '@expo/vector-icons';
@@ -109,8 +109,8 @@ const PostListRow:FC<
                 {userImgUrl &&<Image style={styles.avatar} source={{uri:userImgUrl}}/>}
                  <Text style={styles.name}>{owner}</Text>
                 </View>
-                {isUserPostsPage && <View>
-                  <Entypo style={styles.edit} name="edit" size={24} color="black" 
+                {isUserPostsPage && <View style={styles.customizePost}>
+                  <Entypo style={styles.edit} name="edit" size={30} color="black" 
                     onPress={
                       ()=>{
                         Alert.alert("Edit Post","What do you want to edit?",[
@@ -119,7 +119,7 @@ const PostListRow:FC<
                         ])
                       }
                       }/>
-                  <MaterialIcons name="delete" size={24} color="black" onPress={onDelete}/>
+                  <MaterialIcons name="delete" size={30} color="black" onPress={onDelete}/>
                 </View>}
               </View>
 
@@ -127,6 +127,7 @@ const PostListRow:FC<
                 <TextInput 
                   style={styles.content}
                   editable={true}
+                  multiline={true}
                   ref={postContentRef}
                   onChangeText={setPostContent}
                   
@@ -207,21 +208,21 @@ const styles = StyleSheet.create({
     marginVertical:5,
     elevation :1,
     borderWidth:1,
-    borderColor:'#18c5d9'
+    borderColor:'black'
   },
   topPart:{
     flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center'
+    //justifyContent:'space-evenly',
+    alignItems:'center',
+    
   },
   imageAndName:{
     flexDirection:'row',
     alignItems:'center'
   },
   middlePart:{
-    
-  
   },
+  
   postImage:{
    
     justifyContent:'flex-start',
@@ -244,12 +245,18 @@ const styles = StyleSheet.create({
     left:0
   },
   edit:{
-    right:0
+   right:10
   },
   content:{
+    marginHorizontal:5,
     fontStyle:'normal',
     fontSize:20,
-  
+    width:Dimensions.get("window").width,
+  },
+  customizePost:{
+    flexDirection:'row',
+    marginLeft:70
+    
   },
   buttons:{
     flexDirection: 'row',
