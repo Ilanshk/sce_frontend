@@ -204,7 +204,7 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
 
 const styles = StyleSheet.create({
     container:{
-        marginTop:StatusBar.currentHeight,
+        marginTop:10,
         flex:1,
         flexDirection:'column',
     },
@@ -227,15 +227,25 @@ const styles = StyleSheet.create({
     userName:{
       flexDirection:'row',
       justifyContent:'center', 
+      marginBottom:15
     },
     name:{
       fontSize:30
     },
     input:{
-        fontSize:30,
-        borderWidth:1,
-        width:250,
-        borderRadius:10
+      
+      fontSize:30,
+      borderWidth:1,
+      borderRadius:10,
+      width:250,
+      borderColor: '#007BFF',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      backgroundColor: '#FFFFFF',
+      color: '#00796B'
+      
     },
     userDetails:{
       flexDirection:'column'
@@ -288,7 +298,7 @@ const styles = StyleSheet.create({
       justifyContent:'center'
     },
     myPostsBtn:{
-      marginTop:10,
+      marginTop:20,
       backgroundColor: '#007BFF',
       paddingVertical: 12,
       paddingHorizontal: 20,
