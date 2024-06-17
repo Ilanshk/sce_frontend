@@ -63,6 +63,7 @@ const ProfilePage:FC<{route:any,navigation:any}>=({route,navigation}) =>{
       setUser(fetchedUser);
       setAge(fetchedUser.userAge);
       setCountry(fetchedUser.userCountry);
+      setUserProfileImage(route.params.photo);
     };
 
     fetchUser();

@@ -2,7 +2,7 @@ import apiClient from "./ClientApi"
 
 const loginWithGoogle = async(token:string|null) =>{
     const loginResponse:any = await apiClient.post("/auth/google",{token:token});
-    console.log("Server login response: "+loginResponse.data.userTokens);
+    console.log("Server login response: "+loginResponse.data);
     return loginResponse;
     
 }

@@ -1,5 +1,5 @@
 import LoginApi from "../Api/LoginApi";
-import {View,StyleSheet,Text,TextInput,Button, ImageBackground} from 'react-native'
+import {View,StyleSheet,Text,TextInput,Button, ImageBackground,Alert} from 'react-native'
 import { FC,useEffect, useState } from "react";
 import {GoogleSignin,GoogleSigninButton} from "@react-native-google-signin/google-signin";
 import { Feather } from '@expo/vector-icons';
@@ -35,11 +35,11 @@ const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
             console.log("Button clicked");
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            console.log("Login Page-User info"+userInfo.user.id);
+            console.log("Login Page-User info"+userInfo.idToken);
             const tokenToServer = userInfo.idToken;
             const serverResponse = await LoginApi.loginWithGoogle(tokenToServer)
             if(serverResponse.data.userTokens){
-                navigation.navigate('HomePage',{userName:userInfo.user.name,accessToken:serverResponse.data.userTokens.accessToken,refreshToken:serverResponse.data.userTokens.refreshToken})
+                navigation.navigate('HomePage',{userId:serverResponse.data.userId,userName:userInfo.user.name,accessToken:serverResponse.data.userTokens.accessToken,refreshToken:serverResponse.data.userTokens.refreshToken,photo:userInfo.user.photo})
             }
 
             
@@ -54,8 +54,10 @@ const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
         const res =  await LoginApi.loginWithEmailAndPassword(userDetails.email,userDetails.password);
         if(res.ok){
             navigation.navigate('HomePage',{accessToken:res.data.accessToken,userName:res.data.userName,userId:res.data.userId,refreshToken:res.data.refreshToken})
-            console.log('Navigating to home page...');
-            
+            console.log('Navigating to home page...');   
+        }
+        if(res.status == 400){
+            Alert.alert("Wrong Details","Please Check your email and password")
         }
     }
 

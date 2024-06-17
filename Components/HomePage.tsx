@@ -45,7 +45,7 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
     navigation.setOptions({
       headerRight: () =>(
           <HeaderOprtions
-            navigateToProfile= {()=> navigation.navigate('ProfilePage',{id:route.params.userId,userName:route.params.userName,accessToken:route.params.accessToken,refreshToken:route.params.refreshToken})}
+            navigateToProfile= {()=> navigation.navigate('ProfilePage',{id:route.params.userId,userName:route.params.userName,accessToken:route.params.accessToken,refreshToken:route.params.refreshToken,photo:route.params.photo})}
             logOutOfApp={()=>{
               UserApi.logOutUser(route.params.refreshToken);
               navigation.navigate('LogInPage');
@@ -123,7 +123,8 @@ const HomePage : FC<{navigation:any,route:any}> = ({navigation,route}) => {
 
 const styles = StyleSheet.create({
   postPage:{
-    flex:1
+    flex:1,
+    
   },
   helloUser:{
     fontSize:20,
@@ -135,6 +136,7 @@ const styles = StyleSheet.create({
   },
   flatList:{
     //flex:1
+    backgroundColor:"#668be8"
   },
   activityIndicator:{
     flex:1,

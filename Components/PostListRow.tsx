@@ -219,7 +219,8 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   middlePart:{
-
+    
+  
   },
   postImage:{
    
