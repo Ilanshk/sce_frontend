@@ -1,66 +1,35 @@
 import LoginApi from "../Api/LoginApi";
-import {View,StyleSheet,Text,TextInput,Button, ImageBackground,Alert} from 'react-native'
+import {View,StyleSheet,Text,TextInput,Alert} from 'react-native';
 import { FC,useEffect, useState } from "react";
-import {GoogleSignin,GoogleSigninButton} from "@react-native-google-signin/google-signin";
 import { Feather } from '@expo/vector-icons';
-import userModel from "../Model/userModel";
+
 
 const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
     const [username,setUsername] = useState<string>("");
     const[password,setPassword] = useState<string>("");
+    const[isFocusEmail,setIsFocusEmail] = useState(false);
+    const[isFocusPassword,setIsFocusPassword] = useState(false);
 
-    // GoogleSignin.configure({
-    //     // webClientId:"585864436510-boe9id7jrqrcgsqdmuipds5tjvormp2h.apps.googleusercontent.com",
-    //     //androidClientId:"585864436510-ib4u72t916hhta74vfu2eqpoag3l78g2.apps.googleusercontent.com"
-    // })
-    const configureGoogleSignIn = () =>{
-        
-        GoogleSignin.configure(
-            {
-                webClientId:"585864436510-boe9id7jrqrcgsqdmuipds5tjvormp2h.apps.googleusercontent.com"
-            }
-        );
-    }
 
     useEffect(() => {
-        configureGoogleSignIn();
-        GoogleSignin.signOut();
         navigation.setOptions({
             headerRight:()=> <Text></Text>
         })  
     }, []);
 
-    const handleGoogleSignIn = async () =>{
-        try{
-            console.log("Button clicked");
-            await GoogleSignin.hasPlayServices();
-            const userInfo = await GoogleSignin.signIn();
-            console.log("Login Page-User info"+userInfo.idToken);
-            const tokenToServer = userInfo.idToken;
-            const serverResponse = await LoginApi.loginWithGoogle(tokenToServer)
-            if(serverResponse.data.userTokens){
-                navigation.navigate('HomePage',{userId:serverResponse.data.userId,userName:userInfo.user.name,accessToken:serverResponse.data.userTokens.accessToken,refreshToken:serverResponse.data.userTokens.refreshToken,photo:userInfo.user.photo})
-            }
-
-            
-        }catch(error){
-            console.log("Error sign-in with google: "+error);
-            
-        }
-    }
+    
 
 
     const handleLoginWithEmailAndPassword = async (userDetails:{email:string,password:string}) =>{
         const res =  await LoginApi.loginWithEmailAndPassword(userDetails.email,userDetails.password);
         if(res.ok){
-            navigation.navigate('HomePage',{accessToken:res.data.accessToken,userName:res.data.userName,userId:res.data.userId,refreshToken:res.data.refreshToken})
-            console.log('Navigating to home page...');   
+            navigation.navigate('ChatPage',{accessToken:res.data.accessToken,userName:res.data.userName,userId:res.data.userId,refreshToken:res.data.refreshToken})
         }
         if(res.status == 400){
             Alert.alert("Wrong Details","Please Check your email and password")
         }
     }
-
+    
 
     return (
         <View style={styles.loginPageContainer}>
@@ -69,20 +38,24 @@ const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
             <View style={styles.details}>
                 <View style={styles.email}>
                     <Text style={styles.fieldTitle}>Email</Text>
-                    <TextInput style={styles.input}
+                    <TextInput style={isFocusEmail ?styles.inputFocus : styles.inputBlur}
                         value={username}
                         onChangeText={setUsername}
                         placeholder="Your Email..."
+                        onFocus={() => setIsFocusEmail(true)}
+                        onEndEditing={() => setIsFocusEmail(false)}
                     ></TextInput>
                 </View>
 
                 <View style={styles.password}>
                     <Text style={styles.fieldTitle}>Password</Text>
-                    <TextInput style={styles.input}
+                    <TextInput style={isFocusPassword ?styles.inputFocus : styles.inputBlur}
                         value={password}
                         textContentType='password'
                         onChangeText={setPassword}
                         placeholder="Your password..."
+                        onFocus={() => setIsFocusPassword(true)}
+                        onEndEditing={() => setIsFocusPassword(false)}
                         secureTextEntry={true}
                     >
                     </TextInput>
@@ -102,14 +75,6 @@ const LoginPage:FC<{navigation:any}> = ({navigation}) =>{
                      />
                 </View>
                 
-                <Text>
-                    _______________________or___________________________
-                </Text>
-                <GoogleSigninButton
-                    size={GoogleSigninButton.Size.Wide}
-                    color={GoogleSigninButton.Color.Dark}
-                    onPress = {handleGoogleSignIn}
-                />
                 <Text style={styles.register}>
                     Doesn't have an account yet? 
                     <Text style={styles.underline} onPress={()=>navigation.navigate('RegisterPage')}>
@@ -129,7 +94,7 @@ const styles =StyleSheet.create(
         flex:1,
         alignItems: 'center',
         flexDirection:'column',
-        backgroundColor:'#e3a724'
+        backgroundColor:'#22c8d4'
     },
     topMessage:{
         top:30,
@@ -150,16 +115,27 @@ const styles =StyleSheet.create(
         bottom:10,
         top:10
     },
-    input:{
+    inputBlur:{
         width:300,
-        height: 40,
-        borderWidth: 1,
+        height: 50,
+        borderWidth: 3,
         borderColor: 'black',
-        borderRadius: 5,
+        borderRadius: 10,
         paddingHorizontal: 10,
+        fontSize:15
+    },
+    inputFocus:{
+        width:300,
+        height: 50,
+        borderWidth: 3,
+        borderColor: '#983ab0',
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        fontSize:15
     },
     fieldTitle:{
-        bottom:10
+        bottom:10,
+        fontSize:15
     },
     login:{
         flexDirection:'row',
@@ -182,9 +158,9 @@ const styles =StyleSheet.create(
         bottom:100
     },
     register:{
-        top:10,
+        top:20,
         fontWeight:'bold',
-        fontSize:15
+        fontSize:25
     },
     underline:{
         textDecorationLine: 'underline'   

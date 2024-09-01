@@ -1,4 +1,4 @@
-import {Button,View,Text,TextInput,StyleSheet, TouchableOpacity,Image, StatusBar, ScrollView} from 'react-native';
+import {View,Text,TextInput,StyleSheet, TouchableOpacity,Image, StatusBar, ScrollView} from 'react-native';
 import { useState,FC, useEffect } from 'react';
 import RegisterApi from '../Api/RegisterApi';
 import { Feather } from '@expo/vector-icons';
@@ -14,6 +14,12 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
     const [userCountry,setUserCountry] = useState<string>("");
     const[firstName,setFirstName] = useState<string>("");
     const [lastName,setLastName] = useState<string>("");
+    const[isFocusEmail,setIsFocusEmail] = useState(false);
+    const[isFocusPassword,setIsFocusPassword] = useState(false);
+    const[isFocusAge,setIsFocusAge] = useState(false);
+    const[isFocusCountry,setIsFocusCountry] = useState(false);
+    const[isFocusFirstName,setIsFocusFirstName] = useState(false);
+    const[isFocusLastName,setIsFocusLastName] = useState(false);
 
     useEffect(()=>{
         AddPictureApi.askCameraPermission();
@@ -34,7 +40,6 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
 
     const handleUserRegister = async () =>{
         const userImageUrl = await AddPictureApi.onSave(userImage);
-        console.log("handleUserRegister()--->url = "+userImageUrl);
         
         const resUserRegister = await RegisterApi.registerUser(firstName,lastName,userEmail,userPassword,userImageUrl,userAge,userCountry);
         //User already exists in the application or email/password is missing
@@ -49,7 +54,7 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
         }
        
         if(resUserRegister.data.userTokens.accessToken){
-            navigation.navigate('HomePage',{accessToken:resUserRegister.data.userTokens.accessToken,userName:firstName+lastName})
+            navigation.navigate('ChatPage',{accessToken:resUserRegister.data.userTokens.accessToken,userName:firstName+""+lastName})
         }
     }
     return (
@@ -57,11 +62,10 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
             <ScrollView style = {styles.scrollView} >
                 <View style = {styles.heading}>
                     <Text style={styles.welcomeMessage}>
-                        Welcome to Travmies!
+                        Welcome to our Chat App!
                     </Text>
                     <Text style={styles.descriptionMessage}>
-                        Start Sharing your travel memories with others and 
-                        get inspiration for your next trip!
+                        To start chatting, Please register by filling the below fields
                     </Text>
                 </View>
                 <View>
@@ -91,59 +95,71 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
                 <View style={styles.registerDetails}>
                     <View style={styles.userdetail}>
                                 <Text>First Name</Text>
-                                <TextInput style={styles.input}
+                                <TextInput style={isFocusFirstName? styles.inputFocus:styles.inputBlur }
                                     value={firstName}
                                     onChangeText={setFirstName}
                                     placeholder="First Name..."
                                     textContentType='name'
+                                    onFocus={() => setIsFocusFirstName(true)}
+                                    onEndEditing={() => setIsFocusFirstName(false)}
                                 ></TextInput>
                     </View>
                     <View style={styles.userdetail}>
                                 <Text>Last Name</Text>
-                                <TextInput style={styles.input}
+                                <TextInput style={isFocusLastName? styles.inputFocus : styles.inputBlur}
                                     value={lastName}
                                     onChangeText={setLastName}
                                     placeholder="Last Name..."
                                     textContentType='name'
+                                    onFocus={() => setIsFocusLastName(true)}
+                                    onEndEditing={() => setIsFocusLastName(false)}
                                 ></TextInput>
                     </View>
                     <View style={styles.userdetail}>
                             <Text>Email</Text>
-                            <TextInput style={styles.input}
+                            <TextInput style={isFocusEmail? styles.inputFocus : styles.inputBlur}
                                 value={userEmail}
                                 onChangeText={setUserEmail}
                                 placeholder="Your Email goes here..."
                                 textContentType='emailAddress'
+                                onFocus={() => setIsFocusEmail(true)}
+                                onEndEditing={() => setIsFocusEmail(false)}
                             ></TextInput>
                     </View>
 
                     <View style={styles.userdetail}>
                             <Text>Password</Text>
-                            <TextInput style={styles.input}
+                            <TextInput style={isFocusPassword? styles.inputFocus : styles.inputBlur}
                                 value={userPassword}
                                 textContentType='password'
                                 onChangeText={setUserPassword}
                                 secureTextEntry={true}
                                 placeholder="Your Password goes here..."
+                                onFocus={() => setIsFocusPassword(true)}
+                                onEndEditing={() => setIsFocusPassword(false)}
                             ></TextInput>
                     </View>
 
                     <View style={styles.userdetail}>
                             <Text>Age</Text>
-                            <TextInput style={styles.input}
+                            <TextInput style={isFocusAge? styles.inputFocus : styles.inputBlur}
                                 value={userAge}
                                 onChangeText={setUserAge}
                                 placeholder="Your Age"
+                                onFocus={() => setIsFocusAge(true)}
+                                onEndEditing={() => setIsFocusAge(false)}
                             ></TextInput>
                     </View>
 
                     <View style={styles.userdetail}>
                             <Text>Country</Text>
-                            <TextInput style={styles.input}
+                            <TextInput style={isFocusCountry? styles.inputFocus : styles.inputBlur}
                                 value={userCountry}
                                 onChangeText={setUserCountry}
                                 placeholder="Your Country"
                                 textContentType='countryName'
+                                onFocus={() => setIsFocusCountry(true)}
+                                onEndEditing={() => setIsFocusCountry(false)}
                             ></TextInput>
                     </View>
                     
@@ -157,8 +173,6 @@ const RegisterPage: FC<{navigation:any}> = ({navigation}) =>{
                 </View>
             </ScrollView>
         </View>
-        
-        
     )
 }
 
@@ -202,11 +216,19 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         bottom:15
     },
-    input:{
+    inputBlur:{
         width:300,
         height: 40,
-        borderWidth: 1,
+        borderWidth: 2,
         borderColor: 'black',
+        borderRadius: 5,
+        paddingHorizontal: 10,
+    },
+    inputFocus:{
+        width:300,
+        height: 40,
+        borderWidth: 2,
+        borderColor: '#983ab0',
         borderRadius: 5,
         paddingHorizontal: 10,
     },

@@ -1,5 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
-import PostModel,{Post} from "../Model/PostModel"
+import PostModel from '../Model/PostModel';
 
 
 const askCameraPermission = async() =>{
@@ -45,15 +45,9 @@ const openGallery = async() =>{
 
 const onSave = async(imgUrl:string) =>{
     console.log('save button was pressed');
-    // const student: Student = {
-    //     name:name,
-    //     _id:id,
-    //     imageUrl:""
-    // }
     try{
         console.log("uploading image");
         const url = await PostModel.uploadImage(imgUrl);
-        //StudentModel.addStudent(student);
         return url;
     }catch(err){
       console.log("Error in onSave() "+err);
